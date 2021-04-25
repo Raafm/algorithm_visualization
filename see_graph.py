@@ -3,16 +3,16 @@ from grafo import nodes, lista_arestas
 
 pygame.init()
 
-altura_tela = 700
-largura_tela = 1000
+screen_height = 700
+screnn_width = 1000
 tamanho_numero_indice =10
 cor_numero_indice =(50,150,200)
-screen = pygame.display.set_mode((largura_tela,altura_tela))
+screen = pygame.display.set_mode((screnn_width,screen_height))
 
 screen.fill((0,0,0))
 font = pygame.font.Font('freesansbold.ttf',tamanho_numero_indice)
 
-for cor, inicio, fim, peso in lista_arestas:
+for cor, inicio, fim in lista_arestas:
     pygame.draw.line(screen,cor,nodes[inicio][1],nodes[fim][1],2)
     print(cor)
 
