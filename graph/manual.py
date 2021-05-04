@@ -11,8 +11,10 @@ screen.fill((0,0,0))
 register = False    # register  new edge
 edge_dict = {}      
 node_list = []
-cur = None
 
+cur = None
+seted_cur = False
+n_cur= 0
 
 pointing = None         
 pointing_number = -1            #info of the green node, the edges goes from him to cur
@@ -56,7 +58,27 @@ while running:
 
             
             if event.key == pygame.K_UP:
-                print("repetido: ",cur)
+                
+                if n_cur < len(node_list)-1:
+                    pygame.draw.circle(screen,(0,0,0),cur,7)
+                    pygame.draw.circle(screen,(0,0,255),cur,5)
+                    
+                    n_cur += 1
+                    cur = node_list[n_cur] 
+                    pygame.draw.circle(screen,(255,0,0),cur,7)
+
+
+
+            if event.key == pygame.K_DOWN:
+                
+                if n_cur > 0:
+                    pygame.draw.circle(screen,(0,0,0),cur,7)
+                    pygame.draw.circle(screen,(0,0,255),cur,5)
+                    
+                    n_cur -= 1
+                    cur = node_list[n_cur] 
+                    pygame.draw.circle(screen,(255,0,0),cur,7)                    
+
 
             if event.key == pygame.K_LEFT:  # same thing as RIGHT, but simpler 
                 seted = True
@@ -77,9 +99,13 @@ while running:
                     
                     if event.pos not in node_list:
                         
-                        pygame.draw.circle(screen,(0,0,255),event.pos,5)
-                        node_list.append(event.pos)
+                        if cur:
+                            pygame.draw.circle(screen,(0,0,0),cur,7)
+                            pygame.draw.circle(screen,(0,0,255),cur,5)
+                            
 
+                        pygame.draw.circle(screen,(255,0,0),event.pos,7)
+                        node_list.append(event.pos)
 
                         if not seted:   #advance pointing automaticaly
                             
@@ -91,7 +117,9 @@ while running:
                             if pointing:
                                 pygame.draw.circle(screen,(0,255,0),pointing,5)
                                 pointing_number += 1
+
                         cur = event.pos
+                        n_cur +=1
                         
 
                         
