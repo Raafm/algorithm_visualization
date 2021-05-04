@@ -57,7 +57,7 @@ while running:
                         pygame.draw.circle(screen,(0,255,0),pointing,5)
 
             
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_UP:                                        
                 
                 if n_cur < len(node_list)-1:
                     pygame.draw.circle(screen,(0,0,0),cur,7)

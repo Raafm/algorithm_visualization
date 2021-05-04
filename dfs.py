@@ -18,6 +18,8 @@ process_stack = stack()
 source = int(input("source: "))
 process_stack.insert(source)
 
+pause = False
+
 while True :
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
