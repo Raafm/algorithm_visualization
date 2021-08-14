@@ -207,93 +207,182 @@ node_list = [
 
 
 
-
-node_dict ={}                                                                   # convert position to node's index
-
-for index,node in enumerate(node_list):
-
-    node_dict[node] = index
-
-
-graph = []                                                                      # create graph
-for x in range(len(node_list)):
-    graph.append([])
-
-for node1,node2 in edge_dict:                                               
-
-    graph[node_dict[node1]].append(node_dict[node2])                            # fill graph
-    graph[node_dict[node2]].append(node_dict[node1])
-
-
-
-import pygame,time
-
-
-pygame.init()
-
-
-screen_height = 700
-screnn_width = 1000
-screen = pygame.display.set_mode((screnn_width,screen_height))
-
-
-for node1,node2 in edge_dict:                                                   # draw edges
-    pygame.draw.line(screen,(255,255,255), node1, node2, 2)
-
-for node in node_list:                                                          # draw nodes
-    pygame.draw.circle(screen,  (0,0,255), node, 5)
-
-
-font = pygame.font.Font('freesansbold.ttf',15)
-
-
-pygame.draw.circle(screen,  (255,255,255), (850,150) , 10)
-pygame.draw.circle(screen,(0,255,0),(850,150),5)
-text = font.render("seen (visto)",True,(0,255,0))                               # informative node       
-screen.blit(text,text.get_rect(center = (925,150)))
-
-pygame.draw.circle(screen,(0,255,0),(850,175),10)
-text = font.render("current (atual)",True,(0,255,0))                            # informative node   
-screen.blit(text,text.get_rect(center = (925,175)))
-
-pygame.draw.circle(screen,(255,0,0), (850,200),10)
-text = font.render("memory stack",True,(255,0,0))
-screen.blit(text,text.get_rect(center = (915,200)))                             # informative node   
-text = font.render("(pilha de processamento)",True,(255,0,0))
-screen.blit(text,text.get_rect(center = (910,220)))
-
-
-
-pygame.display.update()                                                         # display graph before algorithm
-
-
-seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
-
-
-algoritmo = int(input("algoritmo: bfs(1), dfs(2): "))
-
-
-
-if algoritmo == 1:
-    
-    from data_struct.queue import queue
-    from algorithms.bfs import bfs
-
-    process_list = queue()
-    source = 0
-    process_list.insert(source)
-
-    bfs(screen, node_list,seen,graph,process_list,source)
-
-
-if algoritmo == 2:
-
-    from data_struct.stack import stack
-    from algorithms.dfs import dfs
-
-    process_stack = stack()
-    source = 0
-    process_stack.insert(source)
-
-    dfs(screen, node_list,seen,graph,process_stack,source)  
-    
+graph =  [
+    [1, 136],
+    [0, 2, 116], #node 1
+    [1, 3, 109, 113], #node 2
+    [2, 4, 96],
+    [3, 5, 32, 51],
+    [4, 6],
+    [5, 7, 26, 47],
+    [6, 8, 18, 42],
+    [7, 9],
+    [8, 10, 14],
+    [9, 11],
+    [10, 12],
+    [11, 13],
+    [12],
+    [9, 15],
+    [14, 16],
+    [15, 17],
+    [16],
+    [7, 19],
+    [18, 20],
+    [19, 21],
+    [20, 22],
+    [21, 23],
+    [22, 24],
+    [23, 25],
+    [24],
+    [6, 27],
+    [26, 28],
+    [27, 29],
+    [28, 30],
+    [29, 31],
+    [30],
+    [4, 33, 85],
+    [32, 34, 74],
+    [33, 35],
+    [34, 36],
+    [35, 37],
+    [36, 38],
+    [37, 39],
+    [38, 40],
+    [39, 41],
+    [40],
+    [7, 43],
+    [42, 44],
+    [43, 45],
+    [44, 46],
+    [45],
+    [6, 48],
+    [47, 49],
+    [48, 50],
+    [49],
+    [4, 52],
+    [51, 53, 66, 72],
+    [52, 54],
+    [53, 55, 62, 69],
+    [54, 56, 59],
+    [55, 57],
+    [56, 58],
+    [57],
+    [55, 60],
+    [59, 61],
+    [60],
+    [54, 63],
+    [62, 64],
+    [65, 63],
+    [64],
+    [52, 67],
+    [66, 68],
+    [67],
+    [54, 70],
+    [69, 71],
+    [70],
+    [52, 73],
+    [72],
+    [33, 75],
+    [74, 76],
+    [75, 77],
+    [78, 76],
+    [77, 79, 83],
+    [78, 80],
+    [79, 81],
+    [80, 82],
+    [81],
+    [78, 84],
+    [83],
+    [32, 86],
+    [85, 87],
+    [86, 88],
+    [87, 89],
+    [88, 90],
+    [89, 91],
+    [90, 92],
+    [91, 93],
+    [92, 94],
+    [93, 95],
+    [94],
+    [3, 97],
+    [96, 98],
+    [97, 99],
+    [98, 100],
+    [99, 101],
+    [100, 102],
+    [101, 103],
+    [102, 104],
+    [103, 105],
+    [104, 106],
+    [105, 107],
+    [106, 108],
+    [107],
+    [2, 110],
+    [109, 111],
+    [110, 112],
+    [111],
+    [2, 114],
+    [113, 115],
+    [114],
+    [1, 117, 134],
+    [116, 118],
+    [117, 119],
+    [118, 120, 132],
+    [121, 119],
+    [120, 122],
+    [121, 123],
+    [122, 124, 128],
+    [123, 125],
+    [124, 126],
+    [125, 127],
+    [126],
+    [123, 129],
+    [128, 130],
+    [129, 131],
+    [130],
+    [119, 133],
+    [132],
+    [116, 135],
+    [134, 169],
+    [0, 137],
+    [136, 138],
+    [137, 139],
+    [138, 140],
+    [139, 141],
+    [140, 142],
+    [141, 143],
+    [142, 144],
+    [143, 145, 165],
+    [144, 146, 159],
+    [145, 147],
+    [146, 148, 154],
+    [147, 149],
+    [148, 150],
+    [149, 151],
+    [150, 152],
+    [151, 153],
+    [152],
+    [147, 155],
+    [154, 156],
+    [155, 157],
+    [156, 158],
+    [157],
+    [145, 160],
+    [159, 161],
+    [160, 162],
+    [161, 163],
+    [162, 164],
+    [163],
+    [144, 166],
+    [165, 167],
+    [166, 168],
+    [167],
+    [135, 170],
+    [169, 171],
+    [170, 172],
+    [171, 173],
+    [172, 174],
+    [173, 175],
+    [174, 176],
+    [175]
+]

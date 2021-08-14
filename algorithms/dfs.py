@@ -7,9 +7,17 @@ def dfs(screen, node_list,seen,graph,process_stack,source):
     text = font.render("DFS",True,(0,255,0))                   # informative node       
     screen.blit(text,text.get_rect(center = (950,50)))
 
+    font = pygame.font.Font('freesansbold.ttf',15)
+    pygame.draw.circle(screen,(255,0,0), (850,200),10)
+    text = font.render("memory stack",True,(255,0,0))
+    screen.blit(text,text.get_rect(center = (915,200)))                             # informative node   
+    text = font.render("(pilha de processamento)",True,(255,0,0))
+    screen.blit(text,text.get_rect(center = (910,220)))
 
-    pause = True
-    current = 0
+    pause = True            # doesn't start until press play (breakspace)
+    current = source
+    process_stack.insert(source)
+
     while True :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

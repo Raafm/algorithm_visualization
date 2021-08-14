@@ -132,8 +132,27 @@ while running:
     time.sleep(0.1)             # avoid bugs/repetion of actions, because the program detects too many times when we interact with it
 
 
-print("\n\nedge_dict = ",edge_dict,"\n\n")
-
-print("node_list =",node_list)
 
 
+node_dict ={}                                                                   # convert position to node's index
+
+for index,node in enumerate(node_list):
+
+    node_dict[node] = index
+
+
+graph = []                                                                      # create graph
+for x in range(len(node_list)):
+    graph.append([])
+
+for node1,node2 in edge_dict:                                               
+
+    graph[node_dict[node1]].append(node_dict[node2])                            # fill graph
+    graph[node_dict[node2]].append(node_dict[node1])
+
+
+print("\n\nedge_dict = ",edge_dict)
+
+print("\n\nnode_list =",node_list)
+
+print("\n\ngraph = ",graph)
