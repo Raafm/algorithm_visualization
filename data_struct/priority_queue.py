@@ -87,6 +87,7 @@ class Heap:
 
 
     def pop(self):
+        #print(self.array)
         max_ = self.array[0]
         self.array[0] = self.array[-1]
         self.array.pop()
