@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 screen.fill((0,0,0))
 
 
-
+precision  = 1
 N = 100
 
 
@@ -148,34 +148,34 @@ while running:
             
     if right:   
 
-        for x0 in range(x,x+5):
+        for x0 in range(x,x+precision):
             paint_position(x0,y,wall)
 
-        x += ( 5 if ( x < 94 ) else 0 )
+        x += ( precision if ( x < 99-precision ) else 0 )
 
 
     if up:   
 
-        for y0 in range(y,y-5,-1):
+        for y0 in range(y,y-precision,-1):
             paint_position(x,y0,wall)
 
-        y -= ( 5 if ( y > 5  ) else 0 )
+        y -= ( precision if ( y > precision  ) else 0 )
 
 
     if down:
         
-        for y0 in range(y,y+5):
+        for y0 in range(y,y+precision):
             paint_position(x,y0,wall)
 
-        y += ( 5 if ( y < 94 ) else 0 )
+        y += ( precision if ( y < 99-precision ) else 0 )
 
 
     if left:
         
-        for x0 in range(x,x-5,-1):
+        for x0 in range(x,x-precision,-1):
             paint_position(x0,y,wall)
 
-        x -= ( 5 if ( x > 5  ) else 0 )
+        x -= ( precision if ( x > precision  ) else 0 )
 
 
 

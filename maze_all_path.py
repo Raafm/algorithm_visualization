@@ -1,7 +1,7 @@
-from data_struct.queue import queue
-from graph.Maze_Dense import labirinth as maze   
+from data_struct.stack import stack
+from graph.Maze import labirinth as maze   
 import pygame,time,random
-from graph.color import Green,Cyan,Blue,Lime,Yellow
+from graph.color import *
 
 
 pygame.init()
@@ -14,7 +14,22 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 screen.fill((0,0,0))
 
 
-
+path_color = [
+Blue,
+Red  	    ,
+Lime	    ,
+Yellow	    ,
+Magenta	    ,
+Gray	    ,
+Dark_gray   ,
+Maroon 	    ,
+Olive  	    ,
+Green  	    ,
+Purple 	    ,
+Teal	    ,
+Navy	    ,
+]
+SP =0
 
 ROWS = len(maze)
 COLS = len(maze[0])
@@ -24,29 +39,27 @@ predecessor =  list( list( ( -1 , -1 ) for _ in range(COLS) ) for _ in range(ROW
 White = (255,255,255)
 Black = ( 0 , 0 , 0 )
 
-Q = queue()
+S = stack()
 
-def remove_queue(i,j):
+def remove_stack(i,j):
     maze[i][j] = Cyan
     pygame.draw.rect(screen ,  Cyan  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) ) 
-    
-
-def insert_queue(i,j):
-    if i < 0 or j < 0 or i >99 or j > 99: return
-    if maze[i][j] != Green:
-        maze[i][j] = Blue
-    pygame.draw.rect(screen ,  Blue  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) )
-    
+    pygame.display.update()
    
+
+def insert_stack(i,j):
+    if i < 0 or j < 0 or i >99 or j > 99: return
+
+    pygame.draw.rect(screen , Cyan  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) )
+    
 
 
 
 
 def display_maze():
     N = len(maze)
-    print(N)
+
     for x in range(N):
-        time.sleep(0.001)
         for y in range(N):
             pygame.draw.rect(screen ,  maze[x][y]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
         pygame.display.update()
@@ -69,16 +82,13 @@ def display_maze():
 
 display_maze()
 
-N_layer = 1
-missing = 0
 
 found = False
 
 source = (0,0)
 current = source
-Q.insert(source)
+S.insert(source)
 see_neighbours = False
-delay = 0.01
 pause = True
 running =  True
 while running :
@@ -101,15 +111,10 @@ while running :
 
     if not see_neighbours and not found:
 
-        if missing == 0:
-            missing = N_layer
-            N_layer = 0
-            pygame.display.update()
-            time.sleep(delay)
 
-        if Q.not_empty():
-            missing -= 1
-            current = Q.pop()
+        if S.not_empty():
+           
+            current = S.pop()
             
         else:
             pause = True
@@ -127,19 +132,19 @@ while running :
             found = True
             continue
 
-        remove_queue(i,j)
+        remove_stack(i,j)
         see_neighbours = True
         
 
     if see_neighbours and not found:
         i,j = current
-        if(       (i+1 < ROWS)             and   (maze[i+1][ j ] == Black or maze[i+1][ j ] == Green) ): insert_queue(i+1 ,  j ); Q.insert((i+1 ,  j )); N_layer += 1 ; predecessor[i+1][ j ] = ( i , j )
-        if(        (0  <  i )              and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_queue(i-1 ,  j ); Q.insert((i-1 ,  j )); N_layer += 1 ; predecessor[i-1][ j ] = ( i , j )
-        if(       (j+1 < COLS)             and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_queue( i  , j+1); Q.insert(( i  , j+1)); N_layer += 1 ; predecessor[ i ][j+1] = ( i , j )
-        if(        (j  > 0 )               and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_queue( i  , j-1); Q.insert(( i  , j-1)); N_layer += 1 ; predecessor[ i ][j-1] = ( i , j )
-        if( (i+1 < ROWS)  and (j+1 < COLS) and   (maze[i+1][j+1] == Black or maze[i+1][j+1] == Green) ): insert_queue(i+1 , j+1); Q.insert((i+1 , j+1)); N_layer += 1 ; predecessor[i+1][j+1] = ( i , j )
-        if( (i+1 < ROWS)  and (j > 0)      and   (maze[i+1][j-1] == Black or maze[i+1][j-1] == Green) ): insert_queue(i+1 , j-1); Q.insert((i+1 , j-1)); N_layer += 1 ; predecessor[i+1][j-1] = ( i , j )
-        if( (0 <  i) and (j+1 < COLS)      and   (maze[i-1][j+1] == Black or maze[i-1][j+1] == Green) ): insert_queue(i-1 , j+1); Q.insert((i-1 , j+1)); N_layer += 1 ; predecessor[i-1][j+1] = ( i , j )
+        if(       (i+1 < ROWS)             and   (maze[i+1][ j ] == Black or maze[i+1][ j ] == Green) ): insert_stack(i+1 ,  j ) ; S.insert((i+1 ,  j )) ; predecessor[i+1][ j ] = ( i , j )
+        if(        (0  <  i )              and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_stack(i-1 ,  j ) ; S.insert((i-1 ,  j )) ; predecessor[i-1][ j ] = ( i , j )
+        if(       (j+1 < COLS)             and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_stack( i  , j+1) ; S.insert(( i  , j+1)) ; predecessor[ i ][j+1] = ( i , j )
+        if(        (j  > 0 )               and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_stack( i  , j-1) ; S.insert(( i  , j-1)) ; predecessor[ i ][j-1] = ( i , j )
+        if( (i+1 < ROWS)  and (j+1 < COLS) and   (maze[i+1][j+1] == Black or maze[i+1][j+1] == Green) ): insert_stack(i+1 , j+1) ; S.insert((i+1 , j+1)) ; predecessor[i+1][j+1] = ( i , j )
+        if( (i+1 < ROWS)  and (j > 0)      and   (maze[i+1][j-1] == Black or maze[i+1][j-1] == Green) ): insert_stack(i+1 , j-1) ; S.insert((i+1 , j-1)) ; predecessor[i+1][j-1] = ( i , j )
+        if( (0 <  i) and (j+1 < COLS)      and   (maze[i-1][j+1] == Black or maze[i-1][j+1] == Green) ): insert_stack(i-1 , j+1) ; S.insert((i-1 , j+1)) ; predecessor[i-1][j+1] = ( i , j )
         
         see_neighbours = False
 
@@ -149,18 +154,19 @@ while running :
         time.sleep(0.01)
         (x,y) = current
         if( current != source ):
-            pygame.draw.rect(screen ,  Green  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
+            pygame.draw.rect(screen ,  path_color[SP]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
             x,y = predecessor[x][y]
-            pygame.draw.rect(screen ,  Lime  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
-            pygame.display.update()
+
+            if random.randint(0,3) == 0:
+                pygame.display.update()
 
             current = (x,y)
 
         if current == source:
             pygame.draw.rect(screen ,  Green  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
             pygame.display.update()
-            pause = True
             found = False
+            SP =    SP+1 if SP < len(path_color) else 0
             continue
 
         
