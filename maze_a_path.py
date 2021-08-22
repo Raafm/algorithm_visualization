@@ -1,7 +1,7 @@
 from data_struct.stack import stack
-from graph.Maze import labirinth as maze   
+from graph.Maze_Dense import labirinth as maze   
 import pygame,time,random
-from graph.color import Green,Cyan,Blue,Lime,Yellow
+from graph.color import *
 
 
 pygame.init()
@@ -14,7 +14,7 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 screen.fill((0,0,0))
 
 
-
+delay = 0.005
 
 ROWS = len(maze)
 COLS = len(maze[0])
@@ -28,14 +28,14 @@ S = stack()
 
 def remove_stack(i,j):
     maze[i][j] = Cyan
-    pygame.draw.rect(screen ,  Cyan  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) ) 
-    
+    pygame.draw.rect(screen ,  Dark_yellow, ( 50 + 5*i , 50 + 5*j , 5 , 5 ) ) 
+    time.sleep(delay)
 
 def insert_stack(i,j):
     if i < 0 or j < 0 or i >99 or j > 99: return
     if maze[i][j] != Green:
         maze[i][j] = Blue
-    pygame.draw.rect(screen ,  Blue  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) )
+    pygame.draw.rect(screen ,  Red  , ( 50 + 5*i , 50 + 5*j , 5 , 5 ) )
     
     pygame.display.update()
 
@@ -63,6 +63,10 @@ def display_maze():
     font = pygame.font.Font('freesansbold.ttf',15)
     text = font.render("Exit (Saida)" ,True, Green)                         
     screen.blit(text,text.get_rect(center = (560,570)))
+
+    font = pygame.font.Font('freesansbold.ttf',25)
+    text = font.render("in stack",True, Red)                      
+    screen.blit(text,text.get_rect(center = (800,250)))
 
     pygame.display.update()
 
@@ -112,7 +116,7 @@ while running :
             
             font = pygame.font.Font('freesansbold.ttf',40)
             text = font.render("Found",True,(0,235,0))                   # informative node       
-            screen.blit(text,text.get_rect(center = (860,50)))
+            screen.blit(text,text.get_rect(center = (800,50)))
             pygame.display.update()
             
             found = True
@@ -128,10 +132,7 @@ while running :
         if(        (0  <  i )              and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_stack(i-1 ,  j ) ; S.insert((i-1 ,  j )) ; predecessor[i-1][ j ] = ( i , j )
         if(       (j+1 < COLS)             and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_stack( i  , j+1) ; S.insert(( i  , j+1)) ; predecessor[ i ][j+1] = ( i , j )
         if(        (j  > 0 )               and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_stack( i  , j-1) ; S.insert(( i  , j-1)) ; predecessor[ i ][j-1] = ( i , j )
-        if( (i+1 < ROWS)  and (j+1 < COLS) and   (maze[i+1][j+1] == Black or maze[i+1][j+1] == Green) ): insert_stack(i+1 , j+1) ; S.insert((i+1 , j+1)) ; predecessor[i+1][j+1] = ( i , j )
-        if( (i+1 < ROWS)  and (j > 0)      and   (maze[i+1][j-1] == Black or maze[i+1][j-1] == Green) ): insert_stack(i+1 , j-1) ; S.insert((i+1 , j-1)) ; predecessor[i+1][j-1] = ( i , j )
-        if( (0 <  i) and (j+1 < COLS)      and   (maze[i-1][j+1] == Black or maze[i-1][j+1] == Green) ): insert_stack(i-1 , j+1) ; S.insert((i-1 , j+1)) ; predecessor[i-1][j+1] = ( i , j )
-        
+       
         see_neighbours = False
 
         time.sleep(0.001)
@@ -140,9 +141,9 @@ while running :
         time.sleep(0.01)
         (x,y) = current
         if( current != source ):
-            pygame.draw.rect(screen ,  Green  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
-            x,y = predecessor[x][y]
             pygame.draw.rect(screen ,  Lime  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
+            x,y = predecessor[x][y]
+            pygame.draw.rect(screen ,  Green  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
             pygame.display.update()
 
             current = (x,y)

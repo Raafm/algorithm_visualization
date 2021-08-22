@@ -78,7 +78,7 @@ source = (0,0)
 current = source
 Q.insert(source)
 see_neighbours = False
-delay = 0.05
+delay = 0.02
 pause = True
 running =  True
 while running :
