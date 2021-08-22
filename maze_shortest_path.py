@@ -78,7 +78,7 @@ source = (0,0)
 current = source
 Q.insert(source)
 see_neighbours = False
-delay = 0.01
+delay = 0.05
 pause = True
 running =  True
 while running :
@@ -137,9 +137,6 @@ while running :
         if(        (0  <  i )              and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_queue(i-1 ,  j ); Q.insert((i-1 ,  j )); N_layer += 1 ; predecessor[i-1][ j ] = ( i , j )
         if(       (j+1 < COLS)             and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_queue( i  , j+1); Q.insert(( i  , j+1)); N_layer += 1 ; predecessor[ i ][j+1] = ( i , j )
         if(        (j  > 0 )               and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_queue( i  , j-1); Q.insert(( i  , j-1)); N_layer += 1 ; predecessor[ i ][j-1] = ( i , j )
-        if( (i+1 < ROWS)  and (j+1 < COLS) and   (maze[i+1][j+1] == Black or maze[i+1][j+1] == Green) ): insert_queue(i+1 , j+1); Q.insert((i+1 , j+1)); N_layer += 1 ; predecessor[i+1][j+1] = ( i , j )
-        if( (i+1 < ROWS)  and (j > 0)      and   (maze[i+1][j-1] == Black or maze[i+1][j-1] == Green) ): insert_queue(i+1 , j-1); Q.insert((i+1 , j-1)); N_layer += 1 ; predecessor[i+1][j-1] = ( i , j )
-        if( (0 <  i) and (j+1 < COLS)      and   (maze[i-1][j+1] == Black or maze[i-1][j+1] == Green) ): insert_queue(i-1 , j+1); Q.insert((i-1 , j+1)); N_layer += 1 ; predecessor[i-1][j+1] = ( i , j )
         
         see_neighbours = False
 
