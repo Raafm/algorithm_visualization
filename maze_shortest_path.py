@@ -46,7 +46,7 @@ def display_maze():
     N = len(maze)
     print(N)
     for x in range(N):
-        time.sleep(0.001)
+        time.sleep(0.01)
         for y in range(N):
             pygame.draw.rect(screen ,  maze[x][y]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
         pygame.display.update()
@@ -65,6 +65,16 @@ def display_maze():
     text = font.render("Exit (Saida)" ,True, Green)                         
     screen.blit(text,text.get_rect(center = (560,570)))
 
+    
+    font = pygame.font.Font('freesansbold.ttf',25)
+    text = font.render("in queue",True, Blue)                      
+    screen.blit(text,text.get_rect(center = (800,250)))
+
+    
+    font = pygame.font.Font('freesansbold.ttf',25)
+    text = font.render("seen",True, Cyan)                      
+    screen.blit(text,text.get_rect(center = (800,350)))
+
     pygame.display.update()
 
 display_maze()
@@ -78,7 +88,7 @@ source = (0,0)
 current = source
 Q.insert(source)
 see_neighbours = False
-delay = 0.02
+delay = 0.025
 pause = True
 running =  True
 while running :

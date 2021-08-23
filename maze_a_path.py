@@ -68,6 +68,11 @@ def display_maze():
     text = font.render("in stack",True, Red)                      
     screen.blit(text,text.get_rect(center = (800,250)))
 
+    
+    font = pygame.font.Font('freesansbold.ttf',25)
+    text = font.render("seen",True, Dark_yellow)                      
+    screen.blit(text,text.get_rect(center = (800,350)))
+
     pygame.display.update()
 
 display_maze()

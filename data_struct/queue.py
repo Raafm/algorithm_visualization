@@ -28,6 +28,12 @@ class queue:
             self.head = self.head.next
             self.length -= 1
             return returned
+    
+    def front(self):
+        if self.length == 0:
+            return None
+        else:
+            return self.head.val
 
     def not_empty(self):
         return bool(self.length)
