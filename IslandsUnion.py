@@ -53,7 +53,7 @@ def display_islands_numbers(N_islands):
     pygame.draw.rect(screen, (0,0,0), (760,10 ,300, 200))    # erase what was before in the island couting
 
     font = pygame.font.Font('freesansbold.ttf',20)
-    text = font.render("N° islands = " + str(N_islands) ,True,node_color[x][y])                   # print counting      
+    text = font.render("N° islands = " + str(N_islands) ,True,(255,255,0))                   # print counting      
     screen.blit(text,text.get_rect(center = (855,100)))
     
 
@@ -86,7 +86,6 @@ def Union(position1,position2):
     global N_islands
     N_islands -= 1
 
-    display_islands_numbers(N_islands)
 
     if size[x1][y1] < size[x2][y2]:
         xt,yt = x1,y1
@@ -95,12 +94,11 @@ def Union(position1,position2):
 
     size[x1][y1] += size[x2][y2]
 
-
     
     for x in range(len(M)):
         for y in range(len(M[0])):
-
             if Find((x,y)) == parent[x2][y2]:
+                node_color[x][y] = node_color[x1][y1]
                 parent[x][y] = (x1,y1)
                 pygame.draw.rect(screen,node_color[x1][y1],(M[x][y][0],M[x][y][1],4,4))
 
@@ -186,13 +184,11 @@ while running:
 
         string = ""
         if part_algorithm == 1:
-            string = "parent(x,y) = (x,y)"
+            string = "parent(x,y) = (x,y)="
+            pygame.draw.rect(screen, (255,255,0), (950,407, 10, 10))
         if part_algorithm == 2:
             string = "     Unions"    
-        if part_algorithm == 3:
-            string = " Search Patriarches:"
-            for n,colour in enumerate(color):
-                pygame.draw.circle(screen, colour , (780+15*n,380), 5)
+
                 
 
         text = font.render(string ,True,(255,255,255))                   # print counting      
@@ -206,7 +202,7 @@ while running:
 
         if node_color[x][y] == WHITE:
             
-            node_color[x][y]  = (   0.8*(x+y), 255 - 0.8*(x+y)  , 2*y )
+            node_color[x][y]  = (  2*y  , 0.8*(x+y)  , 255 - 0.8*(x+y))
             pygame.draw.rect(screen, (255,255,0), (M[x][y][0],M[x][y][1] ,4, 4))
             N_islands += 1
 
@@ -214,7 +210,9 @@ while running:
             node_color[x][y] = forget 
             pygame.draw.rect(screen, forget, (M[x][y][0],M[x][y][1] ,4, 4))
 
-        #print_square(x,y)
+        
+        if random.randint(0,5) == 0:
+            pygame.display.update()
         
 
 
@@ -229,7 +227,7 @@ while running:
             
             look_around(x,y)
             
-
+        display_islands_numbers(N_islands)
 
         if random.randint(0,20) == 0:
             pygame.display.update()
@@ -245,11 +243,17 @@ while running:
             print_square(x,y)
 
         elif parent[x][y] == (x,y):
-            continue
+            pygame.draw.circle(screen, (255,255,0) , M[x][y], 8)
         
         else:
             node_color[x][y] = WHITE        
             print_square(x,y)
 
+        if x == ROWS -1 and y == COLS -1 :
+            display_islands_numbers(N_islands)
+            pygame.display.update()
+
+        if random.randint(0,20) == 0:
+            pygame.display.update() 
 
     x += 1   #next column
