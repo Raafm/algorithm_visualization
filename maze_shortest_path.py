@@ -88,7 +88,7 @@ source = (0,0)
 current = source
 Q.insert(source)
 see_neighbours = False
-delay = 0.025
+delay = 0.033
 pause = True
 running =  True
 while running :
@@ -153,7 +153,7 @@ while running :
         time.sleep(0.001)
 
     if found:
-        time.sleep(0.01)
+        time.sleep(0.025)
         (x,y) = current
         if( current != source ):
             pygame.draw.rect(screen ,  Green  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )

@@ -3,9 +3,13 @@ from graph.Continental import M, node_color
 from  graph.matriz import WHITE, blue,red,ciano,color,SP
 from data_struct.stack import stack
 from math import hypot
+from graph.color import *
 
 ROWS = len(M)
 COLS = len(M[0])
+
+N_islands = 0
+
 print(ROWS,COLS)
 pygame.init()
 
@@ -16,6 +20,9 @@ screnn_width = 1000
 screen = pygame.display.set_mode((screnn_width,screen_height))
 
 screen.fill((0,0,0))
+
+parent = list(  list( (x,y) for y in range(len(M[0]))  ) for x in range(len(M)))
+size = list(  list( 1 for _ in range(len(M[0]))  ) for _ in range(len(M)))
 
 
 def display_islands_map(done,speed= 10):
@@ -35,71 +42,70 @@ def display_islands_map(done,speed= 10):
     #time.sleep(0.001/speed)
 
 def print_square(i,j):
-    pygame.draw.rect(screen, node_color[i][j], (M[i][j][0],M[i][j][1] ,4, 4));
+    #print(node_color[x][y])
+    pygame.draw.rect(screen, node_color[i][j], (M[i][j][0],M[i][j][1] ,4, 4))
     
-    if random.randint(0,1):         # print sometimes to seem faster
+    if not random.randint(0,100):         # print sometimes to seem faster
         pygame.display.update()
     
 
-#
-#
-#def Find(position):
-#
-#    x,y = position
-#
-#    _,Xparent,Yparent = node_color[x][y]
-#
-#    if (Xparent == x) and (Yparent == y): return (x,y)
-#    
-#    
-#    Xparent,Yparent = Find((Xparent,Yparent))
-#
-#    node_color[x][y] = (0,Xparent,Yparent)
-#    print_square(x,y)
-#
-#    return (Xparent,Yparent)
+def display_islands_numbers(N_islands):
+    pygame.draw.rect(screen, (0,0,0), (760,10 ,300, 200))    # erase what was before in the island couting
+
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("N° islands = " + str(N_islands) ,True,node_color[x][y])                   # print counting      
+    screen.blit(text,text.get_rect(center = (855,100)))
+    
+
+
+
+def Find(position):
+
+    x,y = position
+
+    Xparent,Yparent = parent[x][y]
+
+    if (Xparent == x) and (Yparent == y): return (x,y)
+    
+    
+    Xparent,Yparent = Find((Xparent,Yparent))
+
+    parent[x][y] = (Xparent,Yparent)
+
+    return (Xparent,Yparent)
 
 
 def Union(position1,position2):
-    
-    S = stack()
-    x1,y1 = position1
-    while node_color[x1][y1][1] != x1 or node_color[x1][y1][2] != y1: 
-        S.insert((x1,y1))
-        x1,y1 =  node_color[x1][y1][1],node_color[x1][y1][2]
-
-    x2 , y2 = position2
-    while node_color[x2][y2][1] != x2 or node_color[x2][y2][2] != y2: 
-        S.insert((x2,y2))
-        x2,y2 = node_color[x2][y2][1], node_color[x2][y2][2]
 
 
-
-    #x1,y1 = Find(position1)
-    #x2,y2 = Find(position2)
+    x1,y1 = Find(position1)
+    x2,y2 = Find(position2)
 
     if x1 == x2 and y1 == y2: return
 
-    if node_color[x1][y1][0] == node_color[x2][y2][0]: node_color[x1][y1] = (node_color[x1][y1][0]+0.3, x1, y1)
-    elif node_color[x1][y1][0] < node_color[x2][y2][0]: 
-        i  , j  = x1 , y1
-        x1 , y1 = x2 , y2
-        x2 , y2 = i  , j
+    global N_islands
+    N_islands -= 1
+
+    display_islands_numbers(N_islands)
+
+    if size[x1][y1] < size[x2][y2]:
+        xt,yt = x1,y1
+        x1,y1 = x2,y2        
+        x2,y2 = xt,yt
+
+    size[x1][y1] += size[x2][y2]
+
+
     
-    S.insert((x2,y2))
-    while S.not_empty():
-        x,y = S.pop()
-        node_color[x][y] = node_color[x1][y1]
+    for x in range(len(M)):
+        for y in range(len(M[0])):
+
+            if Find((x,y)) == parent[x2][y2]:
+                parent[x][y] = (x1,y1)
+                pygame.draw.rect(screen,node_color[x1][y1],(M[x][y][0],M[x][y][1],4,4))
 
 
 
-    #print_square( x2,y2)
-    #pygame.draw.rect(screen,ciano,(M[x2][y2][0],M[x2][y2][1],4,4))
-    #pygame.draw.circle(screen,(255, 255, 0,),M[x1][y1],3)
-    display_islands_map(random.randint(0,20))
-
-    #pygame.draw.rect(screen,(0,0,0),(M[x2][y2][0],M[x2][y2][1],4,4))
-    pygame.draw.circle(screen,(225, 225, 0,),M[x1][y1],3)
 
 def look_around(i,j):
     
@@ -113,7 +119,7 @@ def look_around(i,j):
     if( (0 <  i) and (j+1 < COLS)      and   node_color[i-1][j+1] != blue   and   node_color[i-1][j+1] != forget ):    Union( (i,j) , (i-1 , j+1) ); 
     if( (0 <  i) and ( j  >  0 )       and   node_color[i-1][j-1] != blue   and   node_color[i-1][j-1] != forget ):    Union( (i,j) , (i-1 , j-1) ); 
 
-
+    #pygame.display.update()
 
 
 display_islands_map(False)
@@ -127,7 +133,7 @@ text = font.render("How many islands? (quantas ilhas)",True,WHITE)
 screen.blit(text,text.get_rect(center = (300,30)))
 display_islands_map(False)
 
-N_islands = 0
+
 x,y = ROWS,COLS-1
 
 running =  True
@@ -184,7 +190,7 @@ while running:
         if part_algorithm == 2:
             string = "     Unions"    
         if part_algorithm == 3:
-            string = "Search Patriarches:"
+            string = " Search Patriarches:"
             for n,colour in enumerate(color):
                 pygame.draw.circle(screen, colour , (780+15*n,380), 5)
                 
@@ -199,23 +205,33 @@ while running:
     if part_algorithm == 1: 
 
         if node_color[x][y] == WHITE:
-            node_color[x][y]  = (  0  , x,  y )
+            
+            node_color[x][y]  = (   0.8*(x+y), 255 - 0.8*(x+y)  , 2*y )
+            pygame.draw.rect(screen, (255,255,0), (M[x][y][0],M[x][y][1] ,4, 4))
+            N_islands += 1
+
         else:
             node_color[x][y] = forget 
+            pygame.draw.rect(screen, forget, (M[x][y][0],M[x][y][1] ,4, 4))
+
+        #print_square(x,y)
         
-        print_square(x,y)
 
 
     #Unions
     if part_algorithm == 2:         
         tx,ty = x,y
-        x,y = ROWS-1-x,COLS-y-1
-        if node_color[x][y] != forget:
-            look_around(x,y)
 
-        pygame.draw.rect(screen , (50 + y , 50 + y  ,  20) , (751, (5*y)+50, 4,4))    # erase what was before in the island couting
+        #x,y = ROWS-1-x,COLS-y-1 #olhar de baixo para cima
         
-        if random.randint(0,4) == 0:
+
+        if node_color[x][y] != forget:
+            
+            look_around(x,y)
+            
+
+
+        if random.randint(0,20) == 0:
             pygame.display.update()
         x,y = tx,ty
     
@@ -228,22 +244,8 @@ while running:
             node_color[x][y] = blue        
             print_square(x,y)
 
-        elif node_color[x][y][1] == x   and   node_color[x][y][2] ==  y:
-            
-            N_islands +=  1 
-            
-            if SP == len(color):
-                SP =1
-            pygame.draw.circle(screen, color[SP] , M[x][y], 5)
-            SP+=1
-
-            pygame.draw.rect(screen, (0,0,0), (760,10 ,300, 200))    # erase what was before in the island couting
-
-            font = pygame.font.Font('freesansbold.ttf',20)
-            text = font.render("N° islands = " + str(N_islands) ,True,node_color[x][y])                   # print counting      
-            screen.blit(text,text.get_rect(center = (855,100)))
-
-            pygame.display.update()
+        elif parent[x][y] == (x,y):
+            continue
         
         else:
             node_color[x][y] = WHITE        
