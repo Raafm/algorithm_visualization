@@ -212,7 +212,7 @@ while running:
             pygame.draw.rect(screen, forget, (M[x][y][0],M[x][y][1] ,4, 4))
 
         
-        if random.randint(0,5) == 0:
+        if random.randint(0,20) == 0:
             pygame.display.update()
         
 

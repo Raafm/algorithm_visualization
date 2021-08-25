@@ -177,7 +177,7 @@ while running:
 
         if node_color[x][y] == WHITE:
             
-            node_color[x][y]  = (  2*y  , 0.8*(x+y)  , 255 - 0.8*(x+y))
+            node_color[x][y]  = (  255 - 0.8*(x+y),   0.8*(x+y), 2*y  )
             pygame.draw.rect(screen, (255,255,0), (M[x][y][0],M[x][y][1] ,4, 4))
             N_islands += 1
 
@@ -186,7 +186,7 @@ while running:
             pygame.draw.rect(screen, forget, (M[x][y][0],M[x][y][1] ,4, 4))
 
         
-        if random.randint(0,5) == 0:
+        if random.randint(0,20) == 0:
             pygame.display.update()
         
 
