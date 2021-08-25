@@ -1,3 +1,4 @@
+from data_struct.ChildUnionFind import *
 import pygame,time,random
 from graph.Continental import M, node_color
 from  graph.matriz import WHITE, blue
@@ -19,14 +20,12 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 
 screen.fill((0,0,0))
 
-parent = list(  list( (x,y) for y in range(len(M[0]))  ) for x in range(len(M)))
-size = list(  list( 1 for _ in range(len(M[0]))  ) for _ in range(len(M)))
+Islands = Matrix_ChildUnionFind(ROWS,COLS)
 
 
 def display_islands_map(done,speed= 10):
     if(done): return
 
-    max_rank =-1
     for y in range(len(M[0])):
         for x in range(len(M)):
             Colour = node_color[x][y]
@@ -55,65 +54,41 @@ def display_islands_numbers(N_islands):
     screen.blit(text,text.get_rect(center = (855,100)))
     
 
-
-
-def Find(position):
-
-    x,y = position
-
-    Xparent,Yparent = parent[x][y]
-
-    if (Xparent == x) and (Yparent == y): return (x,y)
+def fast_Union(position1,position2):
     
+    representative = Islands.Union(position1,position2) # returns None when they are already in the same set 
+    if representative is None: return 
+
+    Xr,Yr = representative             #position of the representative
     
-    Xparent,Yparent = Find((Xparent,Yparent))
-
-    parent[x][y] = (Xparent,Yparent)
-
-    return (Xparent,Yparent)
-
-
-def Union(position1,position2):
-
-
-    x1,y1 = Find(position1)
-    x2,y2 = Find(position2)
-
-    if x1 == x2 and y1 == y2: return
-
     global N_islands
     N_islands -= 1
-
-
-    if size[x1][y1] < size[x2][y2]:
-        xt,yt = x1,y1
-        x1,y1 = x2,y2        
-        x2,y2 = xt,yt
-
-    size[x1][y1] += size[x2][y2]
-
     
-    for x in range(len(M)):
-        for y in range(len(M[0])):
-            if Find((x,y)) == parent[x2][y2]:
-                node_color[x][y] = node_color[x1][y1]
-                parent[x][y] = (x1,y1)
-                pygame.draw.rect(screen,node_color[x1][y1],(M[x][y][0],M[x][y][1],4,4))
-
-
+    childrenList = Islands.child_list(position1)
+    node  = childrenList.head
+    
+    SIZE  = childrenList.size
+    
+    for _ in range(SIZE):
+        x,y = node.data
+        
+        node_color[x][y] = node_color[Xr][Yr]
+        pygame.draw.rect(screen,node_color[Xr][Yr],(M[x][y][0],M[x][y][1],4,4))
+        node = node.next
+    
 
 
 def look_around(i,j):
     
 
-    if(       (i+1 < ROWS)             and   node_color[i+1][ j ] != blue   and   node_color[i+1][ j ] != forget ):    Union( (i,j) , (i+1 ,  j ) ); 
-    if(        (0  <  i )              and   node_color[i-1][ j ] != blue   and   node_color[i-1][ j ] != forget ):    Union( (i,j) , (i-1 ,  j ) ); 
-    if(       (j+1 < COLS)             and   node_color[ i ][j+1] != blue   and   node_color[ i ][j+1] != forget ):    Union( (i,j) , ( i  , j+1) ); 
-    if(        (j  > 0 )               and   node_color[ i ][j-1] != blue   and   node_color[ i ][j-1] != forget ):    Union( (i,j) , ( i  , j-1) ); 
-    if( (i+1 < ROWS)  and (j+1 < COLS) and   node_color[i+1][j+1] != blue   and   node_color[i+1][j+1] != forget ):    Union( (i,j) , (i+1 , j+1) ); 
-    if( (i+1 < ROWS)  and (j > 0)      and   node_color[i+1][j-1] != blue   and   node_color[i+1][j-1] != forget ):    Union( (i,j) , (i+1 , j-1) ); 
-    if( (0 <  i) and (j+1 < COLS)      and   node_color[i-1][j+1] != blue   and   node_color[i-1][j+1] != forget ):    Union( (i,j) , (i-1 , j+1) ); 
-    if( (0 <  i) and ( j  >  0 )       and   node_color[i-1][j-1] != blue   and   node_color[i-1][j-1] != forget ):    Union( (i,j) , (i-1 , j-1) ); 
+    if(       (i+1 < ROWS)             and   node_color[i+1][ j ] != blue   and   node_color[i+1][ j ] != forget ):  fast_Union( (i,j) , (i+1 ,  j ) ); 
+    if(        (0  <  i )              and   node_color[i-1][ j ] != blue   and   node_color[i-1][ j ] != forget ):  fast_Union( (i,j) , (i-1 ,  j ) ); 
+    if(       (j+1 < COLS)             and   node_color[ i ][j+1] != blue   and   node_color[ i ][j+1] != forget ):  fast_Union( (i,j) , ( i  , j+1) ); 
+    if(        (j  > 0 )               and   node_color[ i ][j-1] != blue   and   node_color[ i ][j-1] != forget ):  fast_Union( (i,j) , ( i  , j-1) ); 
+    if( (i+1 < ROWS)  and (j+1 < COLS) and   node_color[i+1][j+1] != blue   and   node_color[i+1][j+1] != forget ):  fast_Union( (i,j) , (i+1 , j+1) ); 
+    if( (i+1 < ROWS)  and (j > 0)      and   node_color[i+1][j-1] != blue   and   node_color[i+1][j-1] != forget ):  fast_Union( (i,j) , (i+1 , j-1) ); 
+    if( (0 <  i) and (j+1 < COLS)      and   node_color[i-1][j+1] != blue   and   node_color[i-1][j+1] != forget ):  fast_Union( (i,j) , (i-1 , j+1) ); 
+    if( (0 <  i) and ( j  >  0 )       and   node_color[i-1][j-1] != blue   and   node_color[i-1][j-1] != forget ):  fast_Union( (i,j) , (i-1 , j-1) ); 
 
     #pygame.display.update()
 
@@ -185,11 +160,10 @@ while running:
             string = "parent(x,y) = (x,y)="
             pygame.draw.rect(screen, (255,255,0), (950,407, 10, 10))
         if part_algorithm == 2:
-            string = "     Unions"  
+            string = "     Unions"    
         if part_algorithm == 3:
             string = " representatives: "
-            pygame.draw.circle(screen, (255,255,0) , (950,409), 8)  
-
+            pygame.draw.circle(screen, (255,255,0) , (950,409), 8)
                 
 
         text = font.render(string ,True,(255,255,255))                   # print counting      
@@ -243,7 +217,8 @@ while running:
             node_color[x][y] = blue        
             print_square(x,y)
 
-        elif parent[x][y] == (x,y):
+        #if it is not water and it is a representative of an Island
+        elif Islands.Find((x,y)) == (x,y):
             pygame.draw.circle(screen, (255,255,0) , M[x][y], 8)
         
         else:
@@ -258,3 +233,4 @@ while running:
             pygame.display.update() 
 
     x += 1   #next column
+
