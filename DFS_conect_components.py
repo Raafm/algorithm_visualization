@@ -1,7 +1,6 @@
 import pygame,time,random
 from data_struct.stack import stack
 from graph.normal import graph,node_list,edge_dict
-from graph.color import *
 
 pygame.init()
 
@@ -14,9 +13,6 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 screen.fill((0,0,0))
 
 
-memory_color  = Red
-current_color = Flame
-visited_color = Yellow
 
 
 def memorize(node,Time = 0.3,show=True):
@@ -24,7 +20,7 @@ def memorize(node,Time = 0.3,show=True):
     if Time == 0:
         Time = 0.1
 
-    pygame.draw.circle(screen,memory_color,node_list[node] , 10)
+    pygame.draw.circle(screen,(255,0,0),node_list[node] , 10)
     
     if show:
         pygame.display.update()
@@ -35,7 +31,7 @@ def memorize(node,Time = 0.3,show=True):
 def visit(node,Time,show=True):
     if Time == 0:
         Time = 0.1
-    pygame.draw.circle(screen,current_color,node_list[node],12)
+    pygame.draw.circle(screen,(0,255,0),node_list[node],12)
 
     if show:
         pygame.display.update()
@@ -48,7 +44,7 @@ def visited(node,Time,show=True):
         Time = 0.1
 
     pygame.draw.circle(screen,  (255,255,255), node_list[node] , 12)
-    pygame.draw.circle(screen,visited_color,node_list[node],10)
+    pygame.draw.circle(screen,(0,255,255),node_list[node],10)
     
 
     if show:
@@ -82,50 +78,53 @@ pygame.display.update()
 
 
 
-def dfs(screen, seen , graph , process_stack , source , speed = 0):
 
+
+
+def dfs_connected_components(screen, node_list,seen,graph,process_stack,speed = 0):
     if speed == 0:
         Time = 0
     else:Time = 1/speed
-
-
+    # informative test:
 
     font = pygame.font.Font('freesansbold.ttf',20)
-    text = font.render("DFS",True,Dark_yellow)                        
+    text = font.render("DFS",True,(0,205,205))                        
     screen.blit(text,text.get_rect(center = (920,50)))
     font = pygame.font.Font('freesansbold.ttf',15)
-    pygame.draw.circle(screen,memory_color, (850,200),10)
-    text = font.render("memory stack",True,memory_color)
+    pygame.draw.circle(screen,(255,0,0), (850,200),10)
+    text = font.render("memory stack",True,(255,0,0))
     screen.blit(text,text.get_rect(center = (915,200)))                             
-    text = font.render("(pilha de processamento)",True,memory_color)
+    text = font.render("(pilha de processamento)",True,(255,0,0))
     screen.blit(text,text.get_rect(center = (910,220)))
 
     font = pygame.font.Font('freesansbold.ttf',15)
 
 
     pygame.draw.circle(screen,  (255,255,255), (850,150) , 10)
-    pygame.draw.circle(screen,visited_color,(850,150),8)
-    text = font.render("seen (visto)",True,visited_color)                               # informative node       
+    pygame.draw.circle(screen,(0,255,255),(850,150),5)
+    text = font.render("seen (visto)",True,(0,255,0))                               # informative node       
     screen.blit(text,text.get_rect(center = (925,150)))
 
-    pygame.draw.circle(screen,current_color,(850,175),10)
-    text = font.render("current (atual)",True,current_color)                            # informative node   
+    pygame.draw.circle(screen,(0,255,0),(850,175),10)
+    text = font.render("current (atual)",True,(0,255,0))                            # informative node   
     screen.blit(text,text.get_rect(center = (925,175)))
 
 
 
     pause = True
-    current = source
-    process_stack.insert(source)
+    current = 0
+    process_stack.insert(0)
 
-
+    node = 0
+    
     while True :
 
         # pygame stuff:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()                   # exit pygame,
-                quit()                          # exit() program
+                pygame.quit()                   #exit pygame,
+                quit()                          #exit() program
+
 
             
             if event.type == pygame.KEYDOWN:        
@@ -136,12 +135,21 @@ def dfs(screen, seen , graph , process_stack , source , speed = 0):
         if pause:
             continue
 
+        
+        
+        if node < len(graph): 
 
-        #  iteration of dfs:
-        if process_stack.not_empty(): 
+            if process_stack.not_empty():
+                current = process_stack.pop()
+            
+            elif not seen[node]:
+                current = node
 
-            current = process_stack.pop()
+            else:
+                node += 1
  
+
+            #  iteration of dfs:
             if not seen[current]:
 
                 visit(current,Time)
@@ -158,10 +166,15 @@ def dfs(screen, seen , graph , process_stack , source , speed = 0):
                         memorize(neighbour,Time)
                         process_stack.insert(neighbour)
 
+
                 visited(current,Time)
 
 
-        pygame.display.update()
+            pygame.display.update()
+
+        else: #node ==len(graph)
+            pause = True
+
 
 
 
@@ -173,4 +186,4 @@ process_stack = stack()
 
 mark(source,(0,205,205),12)
 
-dfs(screen, seen,graph,process_stack,source)
+dfs_connected_components(screen, node_list,seen,graph,process_stack,source)

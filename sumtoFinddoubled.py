@@ -108,7 +108,7 @@ while running :
             pygame.draw.rect( screen , (0,0,0) , ( rectangle[N][0], rectangle[N][1], rectangle[N][2], 1000) )
             pygame.draw.rect( screen , numb_color  ,  rectangle[index-1] )
             pygame.draw.rect(   screen   ,  const_color   ,   (100 + (square_width+space)*N , ground              ,    square_width  ,     size_rate*(N)     )  )
-            #pygame.draw.rect( screen , (0,0,0) , ( sum_rectangle[0], sum_rectangle[1], sum_rectangle[2], 1000) )
+
 
 
             _ , _ ,   width ,   high      =   rectangle[0]
@@ -134,9 +134,7 @@ while running :
             continue
 
 
-        #
-        # if index > 1:
-        #    pygame.draw.rect( screen , (0,0,0) , (sum_rectangle[0], sum_rectangle[1], sum_rectangle[2], 1000))
+
 
 
         x , _ ,   width ,   high      =   rectangle[index]
