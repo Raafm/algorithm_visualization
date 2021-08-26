@@ -42,7 +42,7 @@ def reinitialize():
     pygame.display.update()
 
 
-N = 60
+N = 50
 generate_array(N)
 
 
@@ -63,19 +63,19 @@ numb_color = (50,50,250)
 const_color = (255,255,255)
 sum_color = (250,250,0)
 duplicate_color = (255,0,0)
-ground = 150
-size_rate = 1
+ground = 600
+size_rate = 1.5
 
 for i in range(N+1):
-    rectangle.append((100 + (square_width+space)*i , ground - size_rate*number[i],   square_width,  size_rate*number[i]))
+    rectangle.append( (100 + (square_width+space)*i , ground - size_rate*number[i],   square_width,  size_rate*number[i]) )
     pygame.draw.rect(   screen   ,  numb_color    ,   (100 + (square_width+space)*i , ground - size_rate*number[i],    square_width  ,  size_rate*number[i])  )
-    pygame.draw.rect(   screen   ,  const_color   ,   (100 + (square_width+space)*i , ground              ,    square_width  ,     size_rate*i     )  )
+    pygame.draw.rect(   screen   ,  const_color   ,   (100 + (square_width+space)*i , ground              ,    square_width  ,     size_rate*(i)     )  )
     pygame.display.update()
  
 
 
 
-sum_rectangle = (100,450,0,0)
+sum_rectangle = (100,ground,0,0)
 index = 0
 index2 = 1
 
@@ -102,35 +102,51 @@ while running :
 
 
     if part_algorithm == 2:
+
         if index == N+1: 
-            pause = True
+        
+            pygame.draw.rect( screen , (0,0,0) , ( rectangle[N][0], rectangle[N][1], rectangle[N][2], 1000) )
+            pygame.draw.rect( screen , numb_color  ,  rectangle[index-1] )
+            pygame.draw.rect(   screen   ,  const_color   ,   (100 + (square_width+space)*N , ground              ,    square_width  ,     size_rate*(N)     )  )
+            #pygame.draw.rect( screen , (0,0,0) , ( sum_rectangle[0], sum_rectangle[1], sum_rectangle[2], 1000) )
+
 
             _ , _ ,   width ,   high      =   rectangle[0]
-            _ , _ ,     _   , sum_high    =   sum_rectangle         
-            sum_rectangle                 =   rectangle[N][0] , ground , width , high + sum_high
-            pygame.draw.rect(screen, duplicate_color , sum_rectangle)
+            _ , _ ,     _   , sum_high    =   sum_rectangle
+            sum_high                      =   high + sum_high      
+            sum_rectangle                 =   rectangle[N][0] +space+width , ground - sum_high , width , sum_high
+
+            pygame.draw.rect(screen, index_color , sum_rectangle)
             pygame.display.update()
             print((high + sum_high)/size_rate)
             
             i1,i2 = Find_positions(N)
 
-            pygame.draw.rect(   screen   ,  duplicate_color,   (100 + (square_width+space)*i1 , ground - size_rate*number[i1],    square_width  ,  size_rate*number[i1])  )
-            pygame.draw.rect(   screen   ,  duplicate_color,   (100 + (square_width+space)*i2 , ground - size_rate*number[i2],    square_width  ,  size_rate*number[i2])  )
+            pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i1 , ground - size_rate*number[i1] ,    square_width  ,  size_rate*number[i1])  )
+            pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i2 , ground - size_rate*number[i2] ,    square_width  ,  size_rate*number[i2])  )
             pygame.display.update()
 
 
-            part_algorithm = 2
+            pause = True
+            part_algorithm = 3
             index  = 0
             index2 = 1
             continue
 
 
+        #
+        # if index > 1:
+        #    pygame.draw.rect( screen , (0,0,0) , (sum_rectangle[0], sum_rectangle[1], sum_rectangle[2], 1000))
+
 
         x , _ ,   width ,   high      =   rectangle[index]
-        _ , _ ,     _   , sum_high    =   sum_rectangle         
-        sum_rectangle                 =   x , ground , width , high + sum_high - size_rate*index
+        _ , _ ,     _   , sum_high    =   sum_rectangle  
+        sum_high =        high + sum_high - size_rate*(index)
+        sum_rectangle                 =   x , ground - sum_high, width , sum_high
 
-        pygame.draw.rect(screen, sum_color , sum_rectangle)
+        pygame.draw.rect( screen ,   numb_color  ,  rectangle[index-1] )
+        pygame.draw.rect( screen ,  index_color  ,    sum_rectangle    )
+        pygame.draw.rect( screen ,  index2_color ,  rectangle[index]   )
 
 
         index += 1
@@ -140,11 +156,12 @@ while running :
 
 
     if part_algorithm == 1:
-        
+        part_algorithm =2;index = 1;continue
         if number[index] == number[index2]:
             
             pygame.draw.rect( screen , duplicate_color, (100 + (square_width+space)*index  , ground - size_rate*number[index] ,   square_width  ,  size_rate*number[index])  )
             pygame.draw.rect( screen , duplicate_color, (100 + (square_width+space)*index2 , ground - size_rate*number[index2],   square_width  ,  size_rate*number[index2]) )
+            pygame.draw.rect( screen , numb_color, (100 + (square_width+space)*(index2-1) , ground - size_rate*number[index2-1],   square_width  ,  size_rate*number[index2-1]) )
             part_algorithm = 2  
             index = 1
             
