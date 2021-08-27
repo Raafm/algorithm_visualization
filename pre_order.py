@@ -15,9 +15,9 @@ screen = pygame.display.set_mode((screnn_width,screen_height))
 
 screen.fill((0,0,0))
 
-cur_color = Dark_red
+cur_color = Red
 memory_color = Flame
-seen_color = Flame
+seen_color = Yellow
 node_size  = 5
 rootNode   = TreeNode(root)
 
@@ -79,14 +79,15 @@ while running:
 
 
     if S.not_empty():
-
+        if cur is not None:
+            print_treeNode(cur,seen_color)
         cur = S.pop()
         
         print_treeNode(cur,cur_color)
         
         if cur.right is not None: S.insert(cur.right); print_treeNode(cur.right,memory_color)
         if cur.left is not None: S.insert(cur.left)  ; print_treeNode(cur.left,memory_color)
-        
+    
 
 
     else:# S is empty
@@ -96,4 +97,4 @@ while running:
 
 
     
-    time.sleep(0.05)
+    time.sleep(0.1)
