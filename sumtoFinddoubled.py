@@ -43,9 +43,11 @@ def invert_position(rectangle_info):
     pygame.display.update()
 
 def reinitialize():
+    pygame.draw.rect( screen   , Black, (0,0,1000,1000))
     for i in range(N+1):
         pygame.draw.rect(   screen   ,  numb_color    ,   (100 + (square_width+space)*i , ground - size_rate*number[i],    square_width  ,  size_rate*number[i])  )
         pygame.draw.rect(   screen   ,  const_color   ,   (100 + (square_width+space)*i , ground              ,    square_width  ,     size_rate*i     )  )
+    
     pygame.display.update()
 
 
@@ -81,6 +83,14 @@ for i in range(N+1):
  
 
 
+font = pygame.font.Font('freesansbold.ttf',25)
+text = font.render("brute force",True,numb_color)                        
+screen.blit(text,text.get_rect(center = (920,50)))
+
+pygame.display.update()
+
+
+
 
 sum_rectangle = (100,ground,0,0)
 index = 0
@@ -88,7 +98,7 @@ index2 = 1
 
 part_algorithm = 1
 
-pause =False
+pause = True
 running =  True
 while running :
 
@@ -129,7 +139,7 @@ while running :
         
         
         pygame.display.update()
-        time.sleep(0.01)
+        time.sleep(0.05)
 
 
 
@@ -157,22 +167,22 @@ while running :
             pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i1 , ground - size_rate*number[i1] ,    square_width  ,  size_rate*number[i1])  )
             pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i2 , ground - size_rate*number[i2] ,    square_width  ,  size_rate*number[i2])  )
             pygame.display.update()
-            time.sleep(1)
+            time.sleep(2)
 
             
             part_algorithm = 3
             index  = 0
             index2 = 1
 
+            reinitialize()
             
-            pygame.draw.rect( screen   , Black, (0,0,1000,1000))
             font = pygame.font.Font('freesansbold.ttf',25)
             text = font.render("A[A[i]] *= -1 ",True,numb_color)                        
             screen.blit(text,text.get_rect(center = (920,50)))
             
-            reinitialize()
             
-            time.sleep(1)
+            
+            time.sleep(1.5)
             continue
 
 
@@ -191,7 +201,7 @@ while running :
 
         index += 1
         pygame.display.update()
-        time.sleep(0.01)
+        time.sleep(0.05)
     
 
 
@@ -205,7 +215,7 @@ while running :
             part_algorithm = 2  
             index = 1
             
-            
+            time.sleep(1)
             font = pygame.font.Font('freesansbold.ttf',25)
             text = font.render("sum all",True,numb_color)                        
             screen.blit(text,text.get_rect(center = (920,50)))
