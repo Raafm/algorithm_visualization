@@ -1,4 +1,5 @@
 import pygame,time,random
+from graph.color import *
 
 number = []
 rectangle = []
@@ -11,12 +12,12 @@ def generate_array(N):
         if n not in number:
             number.append(n)
 
-    number.insert(random.randint(0,N-1),random.randint(1,N))
+    number.insert(N-1,number[N-5])
     print(number)
     sum = 0
     for x in range(1,N+1):
         sum += number[x] - x
-    print(sum + number[0])
+    print("solucao = ",sum + number[0])
     
 
 def Find_positions(N):
@@ -34,6 +35,12 @@ def Find_positions(N):
     
     return position[0],position[1]
 
+def invert_position(rectangle_info):
+    x,y,width,height = rectangle_info
+    pygame.draw.rect(screen,Black,rectangle_info)
+    rectangle_info =( x , y + height , width , height)
+    pygame.draw.rect(screen, Yellow, rectangle_info)
+    pygame.display.update()
 
 def reinitialize():
     for i in range(N+1):
@@ -55,14 +62,14 @@ screnn_width = 1000
 screen = pygame.display.set_mode((screnn_width,screen_height))
 
 screen.fill((0,0,0))
-square_width = 8
+square_width    =       8
 space = 4
-index_color = (0,200,0)
-index2_color = (200,200,0)
-numb_color = (50,50,250)
-const_color = (255,255,255)
-sum_color = (250,250,0)
-duplicate_color = (255,0,0)
+index_color     =   (0,200,0)
+index2_color    =   (200,200,0)
+numb_color      =   (50,50,250)
+const_color     =   (255,255,255)
+sum_color       =   (250,250,0)
+duplicate_color =   (255,0,0)
 ground = 600
 size_rate = 1.5
 
@@ -101,6 +108,31 @@ while running :
         continue
 
 
+
+    if part_algorithm == 3:
+
+        if index < N +1:
+            if number[abs(number[index])] >= 0 :
+                invert_position(rectangle[abs(number[index])])
+                number[abs(number[index])] *= -1 
+                index += 1   
+            else:
+                pygame.draw.rect(screen, Red, rectangle[index])
+
+                for n in number:
+                    if number[abs(n)] == number[abs(index)]:
+                        pygame.draw.rect( screen , Red, rectangle[abs(n)])    
+        
+        else:
+            part_algorithm = 4
+            pause = True
+        
+        
+        pygame.display.update()
+        time.sleep(0.01)
+
+
+
     if part_algorithm == 2:
 
         if index == N+1: 
@@ -118,19 +150,29 @@ while running :
 
             pygame.draw.rect(screen, index_color , sum_rectangle)
             pygame.display.update()
-            print((high + sum_high)/size_rate)
+            print((sum_high)/size_rate)
             
             i1,i2 = Find_positions(N)
 
             pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i1 , ground - size_rate*number[i1] ,    square_width  ,  size_rate*number[i1])  )
             pygame.draw.rect( screen   ,  duplicate_color,   (100 + (square_width+space)*i2 , ground - size_rate*number[i2] ,    square_width  ,  size_rate*number[i2])  )
             pygame.display.update()
+            time.sleep(1)
 
-
-            pause = True
+            
             part_algorithm = 3
             index  = 0
             index2 = 1
+
+            
+            pygame.draw.rect( screen   , Black, (0,0,1000,1000))
+            font = pygame.font.Font('freesansbold.ttf',25)
+            text = font.render("A[A[i]] *= -1 ",True,numb_color)                        
+            screen.blit(text,text.get_rect(center = (920,50)))
+            
+            reinitialize()
+            
+            time.sleep(1)
             continue
 
 
@@ -149,12 +191,12 @@ while running :
 
         index += 1
         pygame.display.update()
-        time.sleep(0.1)
+        time.sleep(0.01)
     
 
 
     if part_algorithm == 1:
-        part_algorithm =2;index = 1;continue
+        
         if number[index] == number[index2]:
             
             pygame.draw.rect( screen , duplicate_color, (100 + (square_width+space)*index  , ground - size_rate*number[index] ,   square_width  ,  size_rate*number[index])  )
@@ -163,9 +205,15 @@ while running :
             part_algorithm = 2  
             index = 1
             
-            pause = True
+            
+            font = pygame.font.Font('freesansbold.ttf',25)
+            text = font.render("sum all",True,numb_color)                        
+            screen.blit(text,text.get_rect(center = (920,50)))
+            font = pygame.font.Font('freesansbold.ttf',20)
+            text = font.render("-sum index",True,White)                        
+            screen.blit(text,text.get_rect(center = (915,90)))
             pygame.display.update()
-            time.sleep(1)
+            time.sleep(1.5)
             reinitialize()
             continue
 
