@@ -8,8 +8,8 @@ pygame.init()
 forget = (1,0,0)
 
 screen_height = 700
-screnn_width = 1000
-screen = pygame.display.set_mode((screnn_width,screen_height))
+screen_width = 1000
+screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
 
