@@ -215,35 +215,48 @@ cor_A = (255,150,100)
 cor_B = (100,250,155)
 
 
-pygame.display.update()                                                         # display graph before algorithm
 
 
 
-font = pygame.font.Font('freesansbold.ttf',30)
-text = font.render("mateusinho",True,(0,255,0))                   # informative node       
-screen.blit(text,text.get_rect(center = (900,50)))
+
+font = pygame.font.Font('freesansbold.ttf',18)
+text = font.render("Escolha metade ou menos dos nodes",True,(0,255,0))                   # informative node       
+screen.blit(text,text.get_rect(center = (820,50)))
+
+font = pygame.font.Font('freesansbold.ttf',20)
+text = font.render(" para formar um conjunto",True,(0,255,0))                   # informative node       
+screen.blit(text,text.get_rect(center = (820,70)))
+
+font = pygame.font.Font('freesansbold.ttf',20)
+text = font.render("de modo que todos os outros nodes",True,(0,255,0))                   # informative node       
+screen.blit(text,text.get_rect(center = (820,90)))
+
+
+font = pygame.font.Font('freesansbold.ttf',20)
+text = font.render(" estejam conectados a este conjunto",True,(0,255,0))                   # informative node       
+screen.blit(text,text.get_rect(center = (820,110)))
 
 
 font = pygame.font.Font('freesansbold.ttf',15)
-pygame.draw.circle(screen,(0,0,255), (850,80),5)
+pygame.draw.circle(screen,(0,0,255), (850,130),5)
 text = font.render("V",True,(0,0,255))
-screen.blit(text,text.get_rect(center = (915,80)))                             # informative node 
+screen.blit(text,text.get_rect(center = (915,130)))                             # informative node 
 
 font = pygame.font.Font('freesansbold.ttf',20)
 
 text = font.render("Number of nodes:" + str(len(graph)),True,(255,255,255))
-screen.blit(text,text.get_rect(center = (890,230)))                             # informative node 
+screen.blit(text,text.get_rect(center = (890,280)))                             # informative node 
 
 font = pygame.font.Font('freesansbold.ttf',15)
-pygame.draw.circle(screen,cor_A, (850,110),10)
+pygame.draw.circle(screen,cor_A, (850,160),10)
 text = font.render("A",True,cor_A)
-screen.blit(text,text.get_rect(center = (915,110)))                             # informative node   
+screen.blit(text,text.get_rect(center = (915,160)))                             # informative node   
 
-pygame.draw.circle(screen,cor_B, (850,140),10)
+pygame.draw.circle(screen,cor_B, (850,200),10)
 text = font.render("B",True,cor_B)
-screen.blit(text,text.get_rect(center = (915,140)))                             # informative node   
+screen.blit(text,text.get_rect(center = (915,200)))                             # informative node   
 
-
+pygame.display.update()                                                         # display graph and infos before algorithm 
 
 
 V = list(  node_id for node_id in range(len(graph)))

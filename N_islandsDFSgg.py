@@ -66,7 +66,7 @@ def print_square(i,j):
 
 def DFS(i,j):
     
-    time.sleep(0.02*(random.randint(0,4) == 0))
+    time.sleep(0.003*(random.randint(0,10) == 0))
 
     if(       (i+1 < ROWS)             and   node_color[i+1][ j ] == WHITE ):  node_color[i+1][ j ] = node_color[i][j] ;  print_square( i+1 ,  j  ); DFS( i+1 ,  j  ); 
     if(        (0  <  i )              and   node_color[i-1][ j ] == WHITE ):  node_color[i-1][ j ] = node_color[i][j] ;  print_square( i-1 ,  j  ); DFS( i-1 ,  j  ); 
@@ -156,7 +156,7 @@ while running:
     elif node_color[x][y] == blue:
         node_color[x][y] = ciano
         pygame.draw.rect(screen, node_color[x][y], (M[x][y][0],M[x][y][1] ,4, 4));
-        time.sleep(0.003*random.randint(0,1))
+        time.sleep(0.001*(random.randint(0,15) == 0))
     pygame.display.update()
     
     x += 1   #next column

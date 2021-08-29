@@ -1,6 +1,5 @@
 import pygame, time
-from graph.matriz import M,node_color,color,WHITE, blue,ciano
-
+from graph.Continental import M,node_color,blue,WHITE,ciano
 #for x in range(50,800,50):
 #    print( list((x,y) for y in range(50, 1000,50)))
         
@@ -35,18 +34,18 @@ def display_islands_map(done,speed= 1):
 def DFS(source):
     i,j=source
 
-    if(       (i+1 < ROWS)             and   node_color[i+1][ j ] == WHITE ):  node_color[i+1][ j ] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1, j )) 
-    if(        (0  <  i )              and   node_color[i-1][ j ] == WHITE ):  node_color[i-1][ j ] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1, j )) 
-    if(       (j+1 < COLS)             and   node_color[ i ][j+1] == WHITE ):  node_color[ i ][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS(( i ,j+1)) 
-    if(        (j  > 0 )               and   node_color[ i ][j-1] == WHITE ):  node_color[ i ][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS(( i ,j-1)) 
-    if( (i+1 < ROWS)  and (j+1 < COLS) and   node_color[i+1][j+1] == WHITE ):  node_color[i+1][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1,j+1)) 
-    if( (i+1 < ROWS)  and (j > 0)      and   node_color[i+1][j-1] == WHITE ):  node_color[i+1][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1,j-1)) 
-    if( (0 <  i) and (j+1 < COLS)      and   node_color[i-1][j+1] == WHITE ):  node_color[i-1][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1,j+1)) 
-    if( (0 <  i) and ( j  >  0 )       and   node_color[i-1][j-1] == WHITE ):  node_color[i-1][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1,j-1)) 
+    if(       (i+1 < ROWS)             and   node_color[i+1][ j ] == White ):  node_color[i+1][ j ] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1, j )) 
+    if(        (0  <  i )              and   node_color[i-1][ j ] == White ):  node_color[i-1][ j ] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1, j )) 
+    if(       (j+1 < COLS)             and   node_color[ i ][j+1] == White ):  node_color[ i ][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS(( i ,j+1)) 
+    if(        (j  > 0 )               and   node_color[ i ][j-1] == White ):  node_color[ i ][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS(( i ,j-1)) 
+    if( (i+1 < ROWS)  and (j+1 < COLS) and   node_color[i+1][j+1] == White ):  node_color[i+1][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1,j+1)) 
+    if( (i+1 < ROWS)  and (j > 0)      and   node_color[i+1][j-1] == White ):  node_color[i+1][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS((i+1,j-1)) 
+    if( (0 <  i) and (j+1 < COLS)      and   node_color[i-1][j+1] == White ):  node_color[i-1][j+1] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1,j+1)) 
+    if( (0 <  i) and ( j  >  0 )       and   node_color[i-1][j-1] == White ):  node_color[i-1][j-1] = node_color[i][j] ; display_islands_map(False,2); DFS((i-1,j-1)) 
 
 
 font = pygame.font.Font('freesansbold.ttf',30)
-text = font.render("How many islands? (quantas ilhas)",True,WHITE)                   # informative node       
+text = font.render("How many islands? (quantas ilhas)",True,White)                   # informative node       
 screen.blit(text,text.get_rect(center = (300,30)))
 display_islands_map(False)
 
@@ -88,7 +87,7 @@ while running:
 
     if end_algorithm: continue    
 
-    if node_color[x][y] == WHITE:
+    if node_color[x][y] == White:
 
         N_islands +=1
         node_color[x][y] = color[SP]
@@ -112,8 +111,8 @@ while running:
         
         DFS((x,y))
 
-    elif node_color[x][y] == blue:
-        node_color[x][y] = ciano
+    elif node_color[x][y] == Blue:
+        node_color[x][y] = Cyan
         display_islands_map(False)
     
     font = pygame.font.Font('freesansbold.ttf',40)

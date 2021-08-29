@@ -94,9 +94,9 @@ for x in range(ROWS):
         
     pygame.display.update()
 
-font = pygame.font.Font('freesansbold.ttf',20)
-text = font.render("Find primes, divide by all approach.(Ache os primos, dividindo por todos). ",True,(50,225,50))                        
-screen.blit(text,text.get_rect(center = (400,30)))
+font = pygame.font.Font('freesansbold.ttf',18)
+text = font.render("Find primes, divide by all less than sqrt approach (Ache os primos, dividindo por todos < sqrt). ",True,(50,225,50))                        
+screen.blit(text,text.get_rect(center = (430,30)))
 font = pygame.font.Font('freesansbold.ttf',20)
 text = font.render("last prime: " ,True, true)                         
 screen.blit(text,text.get_rect(center = (875,100)))
