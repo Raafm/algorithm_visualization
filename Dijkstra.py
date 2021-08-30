@@ -68,7 +68,7 @@ def found(node):
 
 
 
-###############3prepare:
+###############prepare:
 
 target_color = Yellow
 

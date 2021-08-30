@@ -44,10 +44,12 @@ def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
 
 
 
-def mark(screen,node_center,color,radius):
+def mark(screen,node_center,color,radius,show=True,Time = 0.1):
 
     pygame.draw.circle(screen, color, node_center , radius)
-
+    if show:
+        pygame.display.update()
+        time.sleep(Time)
 
 
 # name of the algorithm
