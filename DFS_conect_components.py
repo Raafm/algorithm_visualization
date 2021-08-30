@@ -74,15 +74,6 @@ def print_component(component_dict,component_color,SP):
 
 
 
-#print graph:
-for node1,node2 in edge_dict:                                                   # draw edges
-    pygame.draw.line(screen,(255,255,255), node1, node2, 2)
-
-for node in node_list:                                                          # draw nodes
-    pygame.draw.circle(screen,  (0,0,255), node, 5)
-
-pygame.display.update()
-
 
 
 
@@ -100,7 +91,10 @@ def dfs_connected_components(screen, node_list,seen,graph,process_stack,speed = 
     component_color = [
         Purple 	    ,
         Cyan 	    ,
-        Carmesim	,	
+        Carmesim	,
+        Lime        ,
+        Orange	    ,
+        Springgreen	,
         Melada	    ,
         Light_sky   ,
         Dark_gray   ,
@@ -124,9 +118,9 @@ def dfs_connected_components(screen, node_list,seen,graph,process_stack,speed = 
     text = font.render("count",True,Dark_yellow)                        
     screen.blit(text,text.get_rect(center = (920,50)))
     
-    font = pygame.font.Font('freesansbold.ttf',15)
+    font = pygame.font.Font('freesansbold.ttf',18)
     text = font.render("conected components",True,Dark_yellow)                        
-    screen.blit(text,text.get_rect(center = (910,70)))
+    screen.blit(text,text.get_rect(center = (900,70)))
 
     font = pygame.font.Font('freesansbold.ttf',15)
     pygame.draw.circle(screen,memory_color, (850,200),7)
@@ -149,6 +143,15 @@ def dfs_connected_components(screen, node_list,seen,graph,process_stack,speed = 
 
 
 
+
+    #print graph:
+    for node1,node2 in edge_dict:                                                   # draw edges
+        pygame.draw.line(screen,(255,255,255), node1, node2, 2)
+
+    for node in node_list:                                                          # draw nodes
+        pygame.draw.circle(screen,  (0,0,255), node, 5)
+
+    pygame.display.update()
 
     pause = True
     current = 0

@@ -41,7 +41,7 @@ pygame.display.update()                                                         
 seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
 
 
-algoritmo = 1# int(input("algoritmo: bfs(1), dfs(2): "))
+algoritmo = 2# int(input("algoritmo: bfs(1), dfs(2): "))
 
 
 

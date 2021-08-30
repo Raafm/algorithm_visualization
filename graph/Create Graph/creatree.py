@@ -278,7 +278,7 @@ if __name__ == '__main__':
 
     screen.fill((0,0,0))
 
-    y0 = 50
+    y0 = 250
     node_list = []
     children = {}
     def put_node(l,r,y):
@@ -297,7 +297,7 @@ if __name__ == '__main__':
             pygame.draw.line(screen,(255,255,255), ( m , y ), ( ml , y + 100 ) , 2)
              
 
-        if y > screen_height-50    or   r-l< 25:
+        if y +100> screen_height-50    or   r-l< 25:
             children[( m , y)] = ( None, None) 
             return
 

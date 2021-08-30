@@ -34,13 +34,14 @@ def memorize(node,Time = 0.3,show=True):
 
 
 def visit(node,Time,show=True):
-    if Time == 0:
-        Time = 0.1
-    pygame.draw.circle(screen,current_color,node_list[node],12)
+   if Time == 0:
+       Time = 0.1
+   pygame.draw.circle(screen,current_color,node_list[node],12)
 
-    if show:
-        pygame.display.update()
-        time.sleep(Time)
+   if show:
+       pygame.display.update()
+       time.sleep(Time)
+   
 
 
 

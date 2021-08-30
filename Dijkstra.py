@@ -17,18 +17,24 @@ def atribute_distance():
     print("edge_dict =  ", edge_dict)
 
 def show_weight(peso,position,font,peso_color = (0,255,255)):
-    text = font.render(str(peso),True,peso_color)
+    text = font.render(str(peso),True,peso_color,10)
     screen.blit(text,position)
 
 def median_point(p1,p2):
     return ((p1[0] + p2[0])/2, (p1[1] + p2[1])/2)
 
 
+def memorize(node,Time = 0.1,show=True ):
+    pygame.draw.circle(screen,(255,0,0),node_list[node],10)
+
+    if show:
+        pygame.display.update()
+        time.sleep(Time)
 
 
-def visit(node,Time = 0.01,show=True):
+def visit(node,Time = 0.1,show=True):
 
-    pygame.draw.circle(screen,(0,255,0),node_list[node],12)
+    pygame.draw.circle(screen,(0,255,0),node_list[node],10)
 
     if show:
         pygame.display.update()
@@ -36,9 +42,10 @@ def visit(node,Time = 0.01,show=True):
 
 
 
-def visited(node,Time = 0.01,show=True):
-    pygame.draw.circle(screen,  (255,255,255), node_list[node] , 12)
-    pygame.draw.circle(screen,(0,255,255),node_list[node],10)
+def visited(node,Time = 0.1,show=True):
+    pygame.draw.circle(screen,  White, node_list[node] , 10)
+    pygame.draw.circle(screen,  Black,node_list[node] ,9)
+    pygame.draw.circle(screen,(0,255,255),node_list[node],7)
     
 
     if show:
@@ -63,19 +70,20 @@ def found(node):
 
 ###############3prepare:
 
-
-
+target_color = Yellow
 
 
 mst  = list(False for _ in range(len(graph)))
 dist = list(INFINITY for _ in range(len(graph)))
+predecessor = list(-1 for _ in range(len(graph)))
 
-PQ = Heap(comp = lambda node1,node2: node1[1] < node2[1])
+PQ = Heap(comp = lambda node1,node2: node1[1] > node2[1])
 
 source = 0
-target = 45
+target = 55
 ####################
 
+predecessor[source] = source
 dist[source] = 0
 PQ.insert( (source,dist[source]) )
 
@@ -96,6 +104,9 @@ screen.fill((0,0,0))
 
 number_size = 12
 peso_color = Cyan
+memory_color = Red
+current_color = Lime
+visited_color = Cyan
 
 font = pygame.font.Font('freesansbold.ttf',number_size)
 
@@ -110,11 +121,36 @@ for node in node_list:                                                          
 
 
 
-mark(target,Lime,12)
-mark(source,Green,12)
+mark(target,Dark_yellow,12)
+mark(source,Dark_yellow,12)
+
+
+font = pygame.font.Font('freesansbold.ttf',18)
+text = font.render("Dijkstra",True,Dark_yellow)                        
+screen.blit(text,text.get_rect(center = (900,70)))
+
+font = pygame.font.Font('freesansbold.ttf',15)
+pygame.draw.circle(screen,memory_color, (850,200),7)
+text = font.render("priority queue",True,memory_color)
+screen.blit(text,text.get_rect(center = (915,200)))                             
+text = font.render("(fila de prioridade)",True,memory_color)
+screen.blit(text,text.get_rect(center = (910,220)))
+
+
+pygame.draw.circle(screen, White, (850,150) , 10)
+pygame.draw.circle(screen,Black, (850,150) ,9)
+pygame.draw.circle(screen,visited_color,(850,150),7)
+text = font.render("seen (visto)",True,visited_color)                               # informative node       
+screen.blit(text,text.get_rect(center = (925,150)))
+
+pygame.draw.circle(screen,current_color,(850,175),7)
+text = font.render("current (atual)",True,current_color)                            # informative node   
+screen.blit(text,text.get_rect(center = (925,175)))
 
 pygame.display.update()
 
+current = 0
+found = False
 pause = True
 while True:
 
@@ -136,28 +172,48 @@ while True:
         continue
 
 
-    # pegar minimo da Heap
+    if not found:
+        # pegar minimo da Heap
+        current,peso = PQ.pop()
 
-    current,peso = PQ.pop()
-    
-    print("ok")
-    if dist[current] < peso:
-        continue
-    if current == target:
-        pause = True
-    
-    visit(current)
-    # tentar atualizar os elementos
-    
-    for neighbour in graph[current]:
 
-        if mst[neighbour]: continue
+
+        if dist[current] < peso:
+            continue
+        if current == target:
+            mark(current,White,10)
+            mark(current,Black,9)
+            mark(current,target_color,7)
+            pygame.display.update()
+            found = True
+            time.sleep(2)
+            continue
         
-        total_distance = distance(node_list[current], node_list[neighbour]) + dist[current]
-        if total_distance < dist[neighbour]:
-            dist[neighbour] = total_distance
-            PQ.insert((neighbour,dist[neighbour]))
-    
-    mst[current] = True
-    
-    visited(current)
+        if current != source: visit(current)
+        # tentar atualizar os elementos
+
+        for neighbour in graph[current]:
+
+            if mst[neighbour]: continue
+
+            total_distance = distance(node_list[current], node_list[neighbour]) + dist[current]
+            if total_distance < dist[neighbour]:
+                dist[neighbour] = total_distance
+                PQ.insert((neighbour,dist[neighbour]))
+                predecessor[neighbour] = current 
+                memorize(neighbour)
+
+        mst[current] = True
+
+        if current != source:visited(current)
+
+
+
+    else:  #if found, current == target
+
+        pygame.draw.line(screen,Yellow,node_list[predecessor[current]],node_list[current],3)
+        current = predecessor[current]
+        pygame.display.update()
+        time.sleep(0.3)
+        if current == source:
+            pause = True

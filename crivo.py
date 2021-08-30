@@ -85,14 +85,6 @@ def check_prime(element):
 
     return True
 
-time.sleep(5)
-
-for x in range(ROWS):
-    for y in range(COLS):
-    
-        pygame.draw.rect(screen, (205, 205,0), (M[x][y][0],M[x][y][1] ,4, 4))
-        
-    pygame.display.update()
 
 font = pygame.font.Font('freesansbold.ttf',18)
 text = font.render("Find primes, divide by all less than sqrt approach (Ache os primos, dividindo por todos < sqrt). ",True,(50,225,50))                        
@@ -100,7 +92,15 @@ screen.blit(text,text.get_rect(center = (430,30)))
 font = pygame.font.Font('freesansbold.ttf',20)
 text = font.render("last prime: " ,True, true)                         
 screen.blit(text,text.get_rect(center = (875,100)))
+for x in range(ROWS):
+    for y in range(COLS):
+    
+        pygame.draw.rect(screen, (205, 205,0), (M[x][y][0],M[x][y][1] ,4, 4))
+        
+    pygame.display.update()
 
+time.sleep(2)
+pause = True
 
 
 prime_list_all = []
@@ -115,7 +115,7 @@ Sieve = False
 beggining_sieve = False
 
 running =  True
-pause = False           # start paused, press breakspace to start playing
+#pause = False           # start paused, press breakspace to start playing
 while running:
    
     for event in pygame.event.get():

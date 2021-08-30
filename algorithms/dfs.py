@@ -55,4 +55,4 @@ def dfs(screen, node_list,seen,graph,process_stack,source):
 
 
         pygame.display.update()
-        time.sleep(0.1)
+        time.sleep(0.05)

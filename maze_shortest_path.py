@@ -1,5 +1,5 @@
 from data_struct.queue import queue
-from graph.Maze_Dense import labirinth as maze   
+from graph.Maze import labirinth as maze   
 import pygame,time,random
 from graph.color import Green,Cyan,Blue,Lime,Yellow
 

@@ -39,7 +39,7 @@ def bfs(screen, node_list,seen,graph,process_list,source):
         if process_list.not_empty(): 
             
             if missing == 0:
-                time.sleep(1.5)    
+                time.sleep(1)    
                 missing = n_layer
                 n_layer = 0
 
@@ -52,8 +52,8 @@ def bfs(screen, node_list,seen,graph,process_list,source):
             missing -= 1
             current = process_list.pop()
             seen[current] = True
-
-            pygame.draw.circle(screen,  (0,255,0), node_list[current] , 10)
+            pygame.draw.circle(screen,  (255,255,255), node_list[current] , 10)
+            pygame.draw.circle(screen,  (0,255,0), node_list[current] , 5)
 
             for neighbour in graph[current]:
                 if seen[neighbour]:

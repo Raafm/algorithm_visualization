@@ -1,4 +1,4 @@
-from graph.bst import children,root
+from graph.bst_menor import children,root
 from data_struct.TreeNode import TreeNode
 from data_struct.stack import stack
 import pygame,time
@@ -18,14 +18,16 @@ screen.fill((0,0,0))
 cur_color = Red
 memory_color = Flame
 seen_color = Yellow
-node_size  = 5
+node_size  = 8
 rootNode   = TreeNode(root)
-
-def print_treeNode(treeNode,colour):
+Time = 0.2
+def print_treeNode(treeNode,colour,wait = True):
     if treeNode is None: return
     print(treeNode.data)
     pygame.draw.circle(screen,colour,treeNode.data,node_size)
     pygame.display.update()
+
+    if wait:time.sleep(Time)
 
 def convert_to_tree(sub_root):
     if sub_root is not None:
@@ -44,7 +46,7 @@ def convert_to_tree(sub_root):
         convert_to_tree(sub_root.left)
         
 
-        print_treeNode(sub_root,Blue)
+        print_treeNode(sub_root,Blue,False)
         print(sub_root.data)    
 
 
