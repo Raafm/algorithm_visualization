@@ -83,3 +83,58 @@ def informative_nodes(screen,
     pygame.draw.circle(screen,current_color,(850,175),7)
     text = font.render(current_text,True,current_color)                            # informative node   
     screen.blit(text,text.get_rect(center = (925,175)))
+
+    pygame.display.update()
+
+def display_graph(screen, node_position,graph,
+                node_color   = (0, 0 ,255),node_radius = 5 ,
+                source = 0, source_color = (0,255,127),source_radius = 8,
+                target = 1,target_color = (0,255, 0 ),target_radius = 8):
+    #Springgreen	 =      (0,255,127)
+    #Green  	     =	    (0,180,0)
+    
+    #draw lines (edges)
+    for node in range(len(graph)):
+        for neighbour in graph[node]:
+            pygame.draw.line(screen,(255,255,255), node, neighbour,2)
+    
+    #draw circles (nodes)
+    for node_number in range(len(graph)):                                                          # draw nodes
+        if node_number == source:
+            pygame.draw.circle(screen,source_color,node_position[node_number],source_radius)
+        elif node_number == target:
+            pygame.draw.circle(screen,target_color,node_position[node_number],target_radius)
+        else:
+            pygame.draw.circle(screen, node_color, node_position[node_number], node_radius)
+    
+    pygame.display.update()
+
+
+def see_position(screen,position,color = (0,255,0)):
+    pygame.draw.circle(screen,color,position,5)
+    pygame.display.update()
+
+if __name__ == "__main__":
+
+
+    pause = True
+    while True:
+
+        
+            # pygame stuff:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()                   #exit pygame,
+                quit()                          #exit() program
+
+
+            
+            if event.type == pygame.KEYDOWN:        
+                if event.key == pygame.K_SPACE:     #press breakspace to pause or play
+                    pause = not pause   
+                    time.sleep(0.2)
+        
+        if pause:
+            continue
+
+
