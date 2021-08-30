@@ -96,7 +96,7 @@ def display_graph(screen, node_position,graph,
     #draw lines (edges)
     for node in range(len(graph)):
         for neighbour in graph[node]:
-            pygame.draw.line(screen,(255,255,255), node, neighbour,2)
+            pygame.draw.line(screen,(255,255,255), node_position[node], node_position[neighbour],2)
     
     #draw circles (nodes)
     for node_number in range(len(graph)):                                                          # draw nodes

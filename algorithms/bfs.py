@@ -1,7 +1,17 @@
-import pygame,time
+def bfs(screen, node_list,graph,source = 0,steps_mode = False):
+    
+    from data_struct.queue import queue
+    import pygame,time
+    process_list = queue()
+    seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
 
+    screen_height = 700
+    screnn_width = 1000
+    screen = pygame.display.set_mode((screnn_width,screen_height))
 
-def bfs(screen, node_list,seen,graph,process_list,source):
+    screen.fill((0,0,0))
+
+    pygame.init()
 
     font = pygame.font.Font('freesansbold.ttf',30)
     text = font.render("BFS",True,(0,255,0))                   # informative node       
@@ -34,7 +44,9 @@ def bfs(screen, node_list,seen,graph,process_list,source):
         
         if pause:
             continue
-
+        
+        if steps_mode: #pause every step of the algorithm
+            pause = True  #when this iteration ends,the animation is paused
 
         if process_list.not_empty(): 
             

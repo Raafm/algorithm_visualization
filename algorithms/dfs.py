@@ -1,8 +1,19 @@
-import pygame,time
+def dfs(screen, node_list,graph,source = 0, steps_mode = False):
 
+    import pygame,time
+    from data_struct.stack import stack
 
-def dfs(screen, node_list,seen,graph,process_stack,source):
-    
+    process_stack = stack()
+    seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
+
+    screen_height = 700
+    screnn_width = 1000
+    screen = pygame.display.set_mode((screnn_width,screen_height))
+
+    screen.fill((0,0,0))
+
+    pygame.init()
+
     font = pygame.font.Font('freesansbold.ttf',30)
     text = font.render("DFS",True,(0,255,0))                   # informative node       
     screen.blit(text,text.get_rect(center = (950,50)))
@@ -33,7 +44,9 @@ def dfs(screen, node_list,seen,graph,process_stack,source):
         
         if pause:
             continue
-
+        
+        if steps_mode: #pause every step of the algorithm
+            pause = True  #when this iteration ends,the animation is paused
 
         if process_stack.not_empty(): 
 
