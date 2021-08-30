@@ -1,13 +1,25 @@
-def dijkstra(graph,node_position,source = 0, target = 1 ,steps_mode = False):
+
+def dijkstra(graph,node_position, source = 0, target = 1 ,steps_mode = False):
     
     from math import hypot
-    from data_struct.priority_queue import Heap
+    from algorithms.data_struct.priority_queue import Heap
     import pygame,time
+    
+    Black	     =	    (0,0,0)
+    White	     =	    (255,255,255)
+    Red  	     =	    (255,0,0)
+    Lime	     =	    (0,255,0)
+    Blue	     =	    (0,0,200)
+    Yellow	     =	    (255,255,0)
+    Dark_yellow  =      (250,200,0)
+    Cyan 	     =	    (0,255,255)
+    Green  	     =	    (0,180,0)
+    Springgreen	 =      (0,255,127)
 
     ###############prepare:
     INFINITY = 100000
-    target_color = Dark_yellow
-    source_color = Dark_yellow
+    target_color = Springgreen
+    source_color = Green
     target_radius = source_radius = node_radius = 10 
     node_color = Blue
 
@@ -125,8 +137,8 @@ def dijkstra(graph,node_position,source = 0, target = 1 ,steps_mode = False):
 
 
     #show source and target
-    mark(target,Dark_yellow,12)
-    mark(source,Dark_yellow,12)
+    mark(target,target_color,12)
+    mark(source,source_color,12)
 
     #show information
     font = pygame.font.Font('freesansbold.ttf',18)
