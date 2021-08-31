@@ -1,4 +1,4 @@
-algorithm = 4# int(input("algoritmo: bfs(1), dfs(2): "))
+algorithm = 5# int(input("algoritmo: bfs(1), dfs(2): "))
 
 
 #bfs
@@ -35,6 +35,14 @@ if algorithm == 3:
 #dfs to count connected components
 if algorithm == 4:
     from algorithms.DFS_connect_components import dfs_connected_components
+    from graph.graphDENSE import graph,node_list
+    source = 250
+    dfs_connected_components(graph, node_list, source,speed = 100)
+
+
+#prim
+if algorithm == 5:
+    from algorithms.prim import prim
     from graph.normal import graph,node_list
     source = 0
-    dfs_connected_components(graph, node_list, source)
+    prim(graph, node_list,source)

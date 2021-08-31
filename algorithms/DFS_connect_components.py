@@ -52,7 +52,7 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
     node_radius = source_radius = 5
 
 
-    process_stack =  stack()
+
 
     def memorize(node,Time = 0.3,show=True):
 
@@ -114,10 +114,10 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
     else:Time = 1/speed
     # informative test:
 
-    N_islands = -1
+    N_components = 0
     
     component_color = [
-        Purple 	    ,
+        
         Cyan 	    ,
         Carmesim	,
         Lime        ,
@@ -133,41 +133,42 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
         Teal	    ,
         Dark_red    ,
         Castanho	,	
-        Some_grey   ,  	
+        Some_grey   ,
+        Navy	    ,  	
         Light_grey  , 
-        Navy	    ,
         Magenta	    , 	
-        Gray	    ,  
+        Gray	    , 
+        Purple 	    , 
     ]
     SP = 0
 
 
-    font = pygame.font.Font('freesansbold.ttf',20)
+    font = pygame.font.Font('freesansbold.ttf',22)
     text = font.render("count",True,Dark_yellow)                        
     screen.blit(text,text.get_rect(center = (920,50)))
     
     font = pygame.font.Font('freesansbold.ttf',18)
-    text = font.render("conected components",True,Dark_yellow)                        
-    screen.blit(text,text.get_rect(center = (900,70)))
+    text = font.render("connected components",True,Dark_yellow)                        
+    screen.blit(text,text.get_rect(center = (890,70)))
 
-    font = pygame.font.Font('freesansbold.ttf',15)
-    pygame.draw.circle(screen,memory_color, (850,200),7)
+    font = pygame.font.Font('freesansbold.ttf',18)
+    pygame.draw.circle(screen,memory_color, (845,220),7)
     text = font.render("memory stack",True,memory_color)
-    screen.blit(text,text.get_rect(center = (915,200)))                             
+    screen.blit(text,text.get_rect(center = (920,220)))                             
     text = font.render("(pilha de processamento)",True,memory_color)
-    screen.blit(text,text.get_rect(center = (910,220)))
+    screen.blit(text,text.get_rect(center = (890,245)))
 
-    font = pygame.font.Font('freesansbold.ttf',15)
+    font = pygame.font.Font('freesansbold.ttf',20)
 
 
-    pygame.draw.circle(screen,  (255,255,255), (850,150) , 7)
-    pygame.draw.circle(screen,visited_color,(850,150),5)
+    pygame.draw.circle(screen,  (255,255,255), (845,170) , 7)
+    pygame.draw.circle(screen,visited_color,(845,170),5)
     text = font.render("seen (visto)",True,visited_color)                               # informative node       
-    screen.blit(text,text.get_rect(center = (925,150)))
+    screen.blit(text,text.get_rect(center = (925,170)))
 
-    pygame.draw.circle(screen,current_color,(850,175),7)
+    pygame.draw.circle(screen,current_color,(845,195),7)
     text = font.render("current (atual)",True,current_color)                            # informative node   
-    screen.blit(text,text.get_rect(center = (925,175)))
+    screen.blit(text,text.get_rect(center = (925,195)))
 
 
 
@@ -191,10 +192,12 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
 
 
     pause = True
-    current = 0
-   
+    current = source
+    process_stack =  stack()
     seen = list(False for _ in range(len(graph)))
-    seen[source] = True
+    
+    process_stack.insert(source)
+    displayed = False
 
     component_dict = {}
 
@@ -249,14 +252,14 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
                 component_dict.clear()
 
 
-                N_islands += 1
+                N_components += 1
              
                 displayed = False
                 font = pygame.font.Font('freesansbold.ttf',20)
              
                 pygame.draw.rect(screen, Black, (800,350 ,300, 100))
                 pygame.draw.rect(screen, Black, (862,327 , 70, 25))
-                text = font.render("N° components = " + str(N_islands) ,True,  component_color[SP])                   # informative node       
+                text = font.render("N° components = " + str(N_components) ,True,  component_color[SP])                   # informative node       
                 screen.blit(text,text.get_rect(center = (895,400)))
                 pygame.display.update()
 
@@ -294,11 +297,11 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
             pygame.display.update()
 
         else: #node ==len(graph)
-            N_islands += 1
+            N_components += 1
             font = pygame.font.Font('freesansbold.ttf',20)
             
             pygame.draw.rect(screen, Black, (800,350 ,300, 100))
-            text = font.render("N° components = " + str(N_islands) ,True,  component_color[SP])                   # informative node       
+            text = font.render("N° components = " + str(N_components) ,True,  component_color[SP])                   # informative node       
             screen.blit(text,text.get_rect(center = (895,400)))
             print_component(component_dict,component_color,SP)
             pygame.display.update()
@@ -310,10 +313,9 @@ def dfs_connected_components( graph, node_position, source=0, speed = 0):
 
 if __name__ == "__main__":
     source = 0
-    seen = list(False for x in range(len(graph)))
- 
+
     from test_graph import graph,node_position,edge_dict
 
     
 
-    dfs_connected_components( graph,node_position,source,speed = 100)
+    dfs_connected_components( graph,node_position,source,speed = 0)

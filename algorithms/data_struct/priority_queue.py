@@ -88,12 +88,15 @@ class Heap:
 
     def pop(self):
         #print(self.array)
+        if len(self.array) == 0: return None
         max_ = self.array[0]
         self.array[0] = self.array[-1]
         self.array.pop()
         self.heapify(0)
         return max_
 
+    def not_empty(self):
+        return len(self.array) > 0
 
     def __len__(self):
         return len(self.array)
