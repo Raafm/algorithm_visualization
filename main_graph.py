@@ -46,3 +46,10 @@ if algorithm == 5:
     from graph.normal import graph,node_list
     source = 0
     prim(graph, node_list,source)
+
+
+if algorithm == 6:
+    from algorithms.kruskal import kruskal
+    from graph.normal import graph,node_list
+
+    kruskal(graph,node_list)
