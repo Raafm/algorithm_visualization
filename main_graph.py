@@ -1,4 +1,4 @@
-algorithm = 5# int(input("algoritmo: bfs(1), dfs(2): "))
+algorithm = 6
 
 
 #bfs
@@ -48,8 +48,9 @@ if algorithm == 5:
     prim(graph, node_list,source)
 
 
+#kruskal
 if algorithm == 6:
     from algorithms.kruskal import kruskal
     from graph.normal import graph,node_list
 
-    kruskal(graph,node_list)
+    kruskal(graph,node_list,steps_mode = True)
