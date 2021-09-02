@@ -17,11 +17,58 @@ class linked_list:
         self.size  += other.size 
        
 
+class UnionFind:
+    def __init__(self,N):
+        self.parent   = list(i for i in range(N))
+        self.children = list(linked_list(Node(i)) for i in range(N))
+        self.rank     = list(0 for _ in range(N))
+    
+    def Find(self,element):
+        if self.parent[element] == element: return element
+
+        Patriarch = self.Find(self.parent[element])
+        self.parent[element] = Patriarch
+
+        return Patriarch
+    
+    def Union(self,element1,element2):
+        Patriarch1 = self.Find(self.parent[element1])
+        Patriarch2 = self.Find(self.parent[element2])
+
+        if Patriarch1 == Patriarch2: return
+
+        if self.rank[Patriarch1]  < self.rank[Patriarch2]:
+            Patriarch1,Patriarch2 = Patriarch2,Patriarch1
+
+        if self.rank[Patriarch1] == self.rank[Patriarch2]:
+            self.rank[Patriarch1] += 1
+
+        self.parent[Patriarch2] = Patriarch1
+
+        self.children[element1].concat(self.children[element2])
+
+        return element1
+
+    def child_list(self, element):
+        elemement = self.Find(element)
+        return self.children[elemement]# retorns the linked list  
+
+
+
+
+
+
+
+
+
+
+
+
 class Matrix_ChildUnionFind:
     def __init__(self, ROWS,COLS):
         self.parent   =  list(list((x,y) for y in range(COLS)) for x in range(ROWS))
         self.children =  list(list(linked_list(Node((x,y))) for y in range(COLS)) for x in range(ROWS))
-        
+
     
     def Find(self, position):
         x,y = position
