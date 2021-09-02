@@ -4,6 +4,8 @@ import pygame,time
 from graph.color import Green,Cyan,Blue,Lime,Yellow
 
 
+
+
 pygame.init()
 
 
@@ -88,7 +90,7 @@ source = (0,0)
 current = source
 Q.insert(source)
 see_neighbours = False
-delay = 0.033
+delay = 0.025
 pause = True
 running =  True
 while running :
