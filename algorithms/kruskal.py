@@ -354,5 +354,3 @@ def kruskal(graph,node_position, steps_mode = False):
         edge_id += 1
         if edge_id == len(edge_list):
             pause = True
-
-        print(set_color)
