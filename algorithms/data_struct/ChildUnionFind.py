@@ -35,17 +35,15 @@ class UnionFind:
         Patriarch1 = self.Find(self.parent[element1])
         Patriarch2 = self.Find(self.parent[element2])
 
-        if Patriarch1 == Patriarch2: return
+        if Patriarch1 == Patriarch2: return None
 
-        if self.rank[Patriarch1]  < self.rank[Patriarch2]:
-            Patriarch1,Patriarch2 = Patriarch2,Patriarch1
+        if self.children[Patriarch1].size < self.children[Patriarch2].size:  #this class is made for N_islands Union Find where I need to upgrade everyone
+            Patriarch1,Patriarch2 =Patriarch2,Patriarch1
 
-        if self.rank[Patriarch1] == self.rank[Patriarch2]:
-            self.rank[Patriarch1] += 1
 
         self.parent[Patriarch2] = Patriarch1
 
-        self.children[element1].concat(self.children[element2])
+        self.children[Patriarch1].concat(self.children[Patriarch2])
 
         return element1
 
