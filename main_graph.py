@@ -53,4 +53,4 @@ if algorithm == 6:
     from algorithms.kruskal import kruskal
     from graph.normal import graph,node_list
 
-    kruskal(graph,node_list,steps_mode = True)
+    kruskal(graph,node_list,steps_mode = False)
