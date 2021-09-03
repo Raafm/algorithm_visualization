@@ -230,7 +230,7 @@ def kruskal(graph,node_position, steps_mode = False):
             height_id3 = edge_id+1
         else:
             show_weight(edge_list[edge_id+first],(960,15*(edge_id-height_id3)+60),font)   
-        #time.sleep(0.2)     
+        time.sleep(0.05)     
         pygame.display.update()
 
     time.sleep(1)
@@ -300,7 +300,7 @@ def kruskal(graph,node_position, steps_mode = False):
         
 
         if not steps_mode:
-            time.sleep(0.2)
+            time.sleep(0.1)
         
         pygame.draw.line(screen,Black,node_position[node1], node_position[node2],2)
         
@@ -349,7 +349,7 @@ def kruskal(graph,node_position, steps_mode = False):
         show_weight_list(edge_list,first=edge_id+1)
 
         if not steps_mode:
-            time.sleep(0.2)
+            time.sleep(0.05)
      
         edge_id += 1
         if edge_id == len(edge_list):
