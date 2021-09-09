@@ -59,7 +59,7 @@ if algorithm == 6:
 if algorithm == 7:
     from algorithms.cyclewith2nodes import cycleWith2Nodes
     from graph.normal import graph,node_list
-    s = 0
+    s = 10
     t = 50
 
     cycleWith2Nodes(graph, node_list,s,t)
