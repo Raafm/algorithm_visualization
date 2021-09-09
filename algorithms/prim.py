@@ -152,9 +152,6 @@ def prim(graph,node_position, source = 0, steps_mode = False):
     text = font.render("in MST",True,Dark_yellow)                               # informative node       
     screen.blit(text,text.get_rect(center = (925,150)))
 
-    pygame.draw.circle(screen,current_color,(830,175),10)
-    text = font.render("current (atual)",True,current_color)                            # informative node   
-    screen.blit(text,text.get_rect(center = (925,175)))
 
     pygame.display.update()
 
@@ -239,7 +236,7 @@ def prim(graph,node_position, source = 0, steps_mode = False):
             mst[current] = True
 
             
-
+            time.sleep(0.1)
 
 
         else:  #finished

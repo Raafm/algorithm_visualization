@@ -1,4 +1,4 @@
-algorithm = 6
+algorithm = 2
 
 
 #bfs
