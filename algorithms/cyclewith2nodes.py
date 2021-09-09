@@ -1,5 +1,4 @@
-from data_struct.queue import queue
-from data_struct.stack import stack
+
 import math
 import pygame,time
 from colors import *
@@ -49,176 +48,186 @@ def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
 
 
 
-def mark(screen,node_center,color,radius,show=True,Time = 0.1):
+def mark(screen,node_center,color,radius=8,show=True,Time = 0.1):
 
     pygame.draw.circle(screen, color, node_center , radius)
     if show:
         pygame.display.update()
         time.sleep(Time)
 
+def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
+    
+    N = len(graph)
+    #tranforming adj list in a matrix graph
+    matrix_graph = list(list(False for _ in range(N)) for _ in range(N))
+    for node in range(N):
+        for neighbour in graph[node]:
+            matrix_graph[neighbour][node] = matrix_graph[node][neighbour] = True 
 
-pygame.init()
+    graph = matrix_graph
 
-forget = (1,0,0)
+    from data_struct.queue import queue
+    from data_struct.stack import stack
 
-screen_height = 700
-screnn_width = 1000
-screen = pygame.display.set_mode((screnn_width,screen_height))
+    pygame.init()
 
-screen.fill((0,0,0))
+    screen_height = 700
+    screnn_width = 1000
+    screen = pygame.display.set_mode((screnn_width,screen_height))
 
-Q = queue()
-S = stack()
+    screen.fill((0,0,0))
 
-s=0
-t=1
-cur = 0
-graph = [[]]
-visited  = list( False for _ in range(len(graph)))
-parent   = list(  -1   for _ in range(len(graph)))
-flow_to1 = list(  -1   for _ in range(len(graph)))
-flow_to2 = list(  -1   for _ in range(len(graph)))
+    Q = queue()
+    S = stack()
 
-node_position= []
 
-visited[s] = True
+    cur = s
+    visited  = list( False for _ in range(N))
+    parent   = list(  -1   for _ in range(N))
+    flow_to1 = list(  -1   for _ in range(N))
+    flow_to2 = list(  -1   for _ in range(N))
 
-bfs1 = True
-bfs2 = True
-update_path1 = False
-update_path2 = False
-drawing = False
-pause = False
-while True :
 
-    # pygame stuff:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()                   #exit pygame,
-            quit()                          #exit() program
+    visited[s] = True
+    Q.insert(s)
 
-            
-        if event.type == pygame.KEYDOWN:        
-            if event.key == pygame.K_SPACE:     #press breakspace to pause or play
-                pause = not pause   
-                time.sleep(0.2)
-        
-        if pause:
-            continue
+    bfs1 = True
+    bfs2 = False
+    update_path1 = False
+    update_path2 = False
+    drawing = False
+    pause = False
+    while True :
 
-    if bfs1:
-        if Q.not_empty():
-            cur = Q.pop()
-            visit(screen,node_position[cur],Time = 0.01)
-        else:
-            bfs1 = False
-            update_path1 = True
+        # pygame stuff:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()                   #exit pygame,
+                quit()                          #exit() program
 
-        if cur == t:
-            while Q.not_empty():Q.pop()
-            continue
-
-        for neighbour in  len(graph):
-            if (not visited[neighbour]) and (graph[cur][neighbour] > 0):
-                visited[neighbour] = True
-                parent[neighbour]  = cur
-                Q.insert(neighbour)
-                memorize(screen,node_position[neighbour],Time = 0.01)
                 
+            if event.type == pygame.KEYDOWN:        
+                if event.key == pygame.K_SPACE:     #press breakspace to pause or play
+                    pause = not pause   
+                    time.sleep(0.2)
             
+            if pause:
+                continue
 
-    elif update_path1:
-        if not drawing:
+        if bfs1:
+            if Q.not_empty():
+                cur = Q.pop()
+                visit(screen,node_position[cur],Time = 0.01)
+            else:
+                bfs1 = False
+                update_path1 = True
+
+            if cur == t:
+                while Q.not_empty():Q.pop()
+                continue
+
+            for neighbour in  range(N):
+                if (not visited[neighbour]) and (graph[cur][neighbour]):
+                    visited[neighbour] = True
+                    parent[neighbour]  = cur
+                    Q.insert(neighbour)
+                    memorize(screen,node_position[neighbour],Time = 0.01)
+                    
+                
+
+        elif update_path1:
+            if not drawing:
+                cur = t
+                while s != cur:
+                    pred = parent[cur]
+                    S.insert((pred,cur)) 
+                    graph[pred][cur] = 0
+                    cur = pred
+                drawing = True      
+            else:
+                if S.not_empty():
+                    node1,node2 = S.pop()
+                    arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
+                else:
+                    drawing = False
+                    bfs2 = True
+                    update_path1 = False
+                    visited = list(False for _ in range(N))
+                    visited[s] = True
+                    Q.insert(s)
+        
+
+
+        elif bfs2:
+            if Q.not_empty():
+                cur = Q.pop()
+                visit(screen,node_position[cur],Time = 0.01)
+            else:
+                bfs2 = False
+                update_path2 = True
+
+
+            if cur ==  t:
+                while Q.not_empty():Q.pop()
+                continue  
+
+            if flow_to1[cur] > 0:
+                pred = flow_to1[cur]
+                if not visited[pred]:
+                    Q.insert(pred)
+                    visited[pred] = True
+                    parent[pred]  = cur
+                    memorize(screen,node_position[cur],Time = 0.01)
+
+            for neighbour in  range(N):
+                if (not visited[neighbour]) and (graph[cur][neighbour] > 0):
+                    visited[neighbour] = True
+                    parent[neighbour]  = cur
+                    Q.insert(neighbour)
+                    memorize(screen,node_position[neighbour],Time = 0.01)
+
+
+
+        elif update_path2:
+            if not drawing:
+                cur = t
+                while s != cur:
+                    pred = parent[cur]
+                    if flow_to1[pred] != cur:
+                        flow_to2[cur] = pred
+                        S.insert((pred,cur))
+                    cur = pred 
+
+                drawing = True      
+            else:
+                if S.not_empty():
+                    node1,node2 = S.pop()
+                    arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
+                else:
+                    drawing = False
+                    visited = list(False for _ in range(N))
+                    visited[s] = True
+                    Q.insert(s)
+                    update_path2 = False
+
+
+
+        
+        else:
             cur = t
             while s != cur:
-                pred = parent[cur]
-                S.insert((pred,cur)) 
+                pred = flow_to1[cur]
+                S.insert((pred,cur))
                 cur = pred
-            drawing = True      
-        else:
-            if S.not_empty():
+
+            while S.not_empty():
                 node1,node2 = S.pop()
-                arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
-            else:
-                drawing = False
-                bfs2 = True
-                update_path1 = False
-                visited = list(False for _ in range(len(graph)))
-                visited[s] = True
-                Q.insert(s)
-    
+                arrow(screen,node_position[node1],node_position[node2],Flame,Dark_red,10,7)
+                time.sleep(0.01)
 
-
-    elif bfs2:
-        if Q.not_empty():
-            cur = Q.pop()
-            visit(screen,node_position[cur],Time = 0.01)
-        else:
-            bfs2 = False
-            update_path2 = True
-
-
-        if cur ==  t:
-            while Q.not_empty():Q.pop()
-            continue  
-
-        if flow_to1[cur] > 0:
-            pred = flow_to1[cur]
-            if not visited[pred]:
-                Q.insert(pred)
-                visited[pred] = True
-                parent[pred]  = cur
-                memorize(screen,node_position[cur],Time = 0.01)
-
-        for neighbour in  len(graph):
-            if (not visited[neighbour]) and (graph[cur][neighbour] > 0):
-                visited[neighbour] = True
-                parent[neighbour]  = cur
-                Q.insert(neighbour)
-                memorize(screen,node_position[neighbour],Time = 0.01)
-
-
-
-    elif update_path2:
-        if not drawing:
             cur = t
-            while s != cur:
-                pred = parent[cur]
-                if flow_to1[pred] != cur:
-                    flow_to2[cur] = pred
-                    S.insert((pred,cur))
-                cur = pred 
-
-            drawing = True      
-        else:
-            if S.not_empty():
-                node1,node2 = S.pop()
-                arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
-            else:
-                drawing = False
-                visited = list(False for _ in range(len(graph)))
-                visited[s] = True
-                Q.insert(s)
-                update_path2 = False
-
-
-
-    
-    else:
-        cur = t
-        while s != cur:
-            pred = flow_to1[cur]
-            S.insert((pred,cur))
-            cur = pred
-
-        while S.not_empty():
-            node1,node2 = S.pop()
-            arrow(screen,node_position[node1],node_position[node2],Flame,Dark_red,10,7)
-            time.sleep(0.01)
-
-        cur = t
-        while cur != s:
-            pred = flow_to2[cur]
-            arrow(screen,node_position[pred],node_position[cur],Flame,Dark_red,10,7)
-            time.sleep(0.01)
-            cur = pred
+            while cur != s:
+                pred = flow_to2[cur]
+                arrow(screen,node_position[pred],node_position[cur],Flame,Dark_red,10,7)
+                time.sleep(0.01)
+                cur = pred
