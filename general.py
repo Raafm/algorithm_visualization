@@ -1,5 +1,19 @@
 import pygame,time
 from math import hypot
+import math
+
+def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),  trirad= 8, thickness=5):
+    pygame.draw.line(screen, lcolor, start, end, thickness)
+    rotation = (math.atan2(start[1] - end[1], end[0] - start[0])) + math.pi/2
+    rad = 180/math.pi
+    pygame.draw.polygon(screen, tricolor, (
+            (end[0] + trirad * math.sin(      rotation    ), end[1] + trirad * math.cos(     rotation     )),                    
+            (end[0] + trirad * math.sin(rotation - 120*rad), end[1] + trirad * math.cos(rotation - 120*rad)),
+            (end[0] + trirad * math.sin(rotation + 120*rad), end[1] + trirad * math.cos(rotation + 120*rad))
+        )
+    )
+    pygame.display.update()
+
 
 def distance(node1,node2):
     return hypot(node1[0]-node2[0], node1[1]-node2[1])
