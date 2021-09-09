@@ -1,11 +1,10 @@
 
 import math
 import pygame,time
-from colors import *
 
 
 
-def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),  trirad= 8, thickness=5):
+def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),  trirad= 4, thickness=3):
     pygame.draw.line(screen, lcolor, start, end, thickness)
     rotation = (math.atan2(start[1] - end[1], end[0] - start[0])) + math.pi/2
     rad = 180/math.pi
@@ -37,8 +36,8 @@ def visit(screen,node_center,visit_color = (0,255,0),radius = 10,show=True,Time 
 
 
 def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
-    Cyan 	     =	    (0,255,255)
-    pygame.draw.circle(screen, Cyan , node_center , radius)
+    Yellow = (255,255,0)
+    pygame.draw.circle(screen, Yellow , node_center , radius)
 
     
 
@@ -56,39 +55,54 @@ def mark(screen,node_center,color,radius=8,show=True,Time = 0.1):
         time.sleep(Time)
 
 def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
-    
-    N = len(graph)
-    #tranforming adj list in a matrix graph
-    matrix_graph = list(list(False for _ in range(N)) for _ in range(N))
-    for node in range(N):
-        for neighbour in graph[node]:
-            matrix_graph[neighbour][node] = matrix_graph[node][neighbour] = True 
-
-    graph = matrix_graph
-
-    from data_struct.queue import queue
-    from data_struct.stack import stack
+    from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,royalblue,Black,Springgreen,Green
+    from algorithms.data_struct.queue import queue
+    from algorithms.data_struct.stack import stack
 
     pygame.init()
 
     screen_height = 700
-    screnn_width = 1000
+    screnn_width = 1300
     screen = pygame.display.set_mode((screnn_width,screen_height))
 
-    screen.fill((0,0,0))
+    screen.fill((0,0,0))    
+
+
+    N = len(graph)
+    #tranforming adj list in a matrix graph
+    matrix_graph = list(list(False for _ in range(N)) for _ in range(N))
+    input_graph = graph
+
+
+    for node in range(N):
+        for neighbour in graph[node]:
+            pygame.draw.line(screen,White,node_position[node],node_position[neighbour],2)
+            matrix_graph[neighbour][node] = matrix_graph[node][neighbour] = True 
+
+
+    for node in range(N):
+        pygame.draw.circle(screen,Blue,node_position[node],8)
+
+    pygame.display.update()
+
+
+
+    graph = matrix_graph
+
+
 
     Q = queue()
     S = stack()
 
 
     cur = s
-    visited  = list( False for _ in range(N))
+    seen  = list( False for _ in range(N))
     parent   = list(  -1   for _ in range(N))
     flow_to1 = list(  -1   for _ in range(N))
     flow_to2 = list(  -1   for _ in range(N))
 
 
-    visited[s] = True
+    seen[s] = True
     Q.insert(s)
 
     bfs1 = True
@@ -111,8 +125,8 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
                     pause = not pause   
                     time.sleep(0.2)
             
-            if pause:
-                continue
+        if pause:
+            continue
 
         if bfs1:
             if Q.not_empty():
@@ -127,44 +141,62 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
                 continue
 
             for neighbour in  range(N):
-                if (not visited[neighbour]) and (graph[cur][neighbour]):
-                    visited[neighbour] = True
+                if (not seen[neighbour]) and (graph[cur][neighbour]):
+                    seen[neighbour] = True
                     parent[neighbour]  = cur
                     Q.insert(neighbour)
                     memorize(screen,node_position[neighbour],Time = 0.01)
+            
+            visited(screen,node_position[cur])
                     
                 
 
         elif update_path1:
             if not drawing:
+                pygame.draw.rect(screen,Black,(0,0,1000,1000))
+                for node in range(N):
+                    for neighbour in input_graph[node]:
+                        pygame.draw.line(screen,White,node_position[node],node_position[neighbour],2)
+
+                for node in range(N):
+                    pygame.draw.circle(screen,Blue,node_position[node],8)
+
+
                 cur = t
                 while s != cur:
                     pred = parent[cur]
                     S.insert((pred,cur)) 
-                    graph[pred][cur] = 0
+                    graph[pred][cur] = False
+                    flow_to1[cur] = pred
                     cur = pred
                 drawing = True      
             else:
                 if S.not_empty():
                     node1,node2 = S.pop()
-                    arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
+                    
+                    arrow(screen,node_position[node1], node_position[node2],Springgreen,Green	)
+                    time.sleep(0.3)
+
                 else:
                     drawing = False
                     bfs2 = True
                     update_path1 = False
-                    visited = list(False for _ in range(N))
-                    visited[s] = True
+                    seen = list(False for _ in range(N))
+                    seen[s] = True
                     Q.insert(s)
+                    time.sleep(1)
         
 
 
         elif bfs2:
+            
             if Q.not_empty():
                 cur = Q.pop()
                 visit(screen,node_position[cur],Time = 0.01)
             else:
                 bfs2 = False
                 update_path2 = True
+                time.sleep(1)
 
 
             if cur ==  t:
@@ -173,22 +205,23 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
 
             if flow_to1[cur] > 0:
                 pred = flow_to1[cur]
-                if not visited[pred]:
+                if not seen[pred]:
                     Q.insert(pred)
-                    visited[pred] = True
+                    seen[pred] = True
                     parent[pred]  = cur
                     memorize(screen,node_position[cur],Time = 0.01)
 
             for neighbour in  range(N):
-                if (not visited[neighbour]) and (graph[cur][neighbour] > 0):
-                    visited[neighbour] = True
+                if (not seen[neighbour]) and (graph[cur][neighbour] > 0):
+                    seen[neighbour] = True
                     parent[neighbour]  = cur
                     Q.insert(neighbour)
                     memorize(screen,node_position[neighbour],Time = 0.01)
 
-
+            visited(screen,node_position[cur])
 
         elif update_path2:
+            
             if not drawing:
                 cur = t
                 while s != cur:
@@ -202,11 +235,13 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
             else:
                 if S.not_empty():
                     node1,node2 = S.pop()
-                    arrow(screen,node_position[node1],node_position[node2],Cyan,Cyan)
+                    arrow(screen,node_position[node1], node_position[node2],royalblue,royalblue)
+                    time.sleep(0.3)
+
                 else:
                     drawing = False
-                    visited = list(False for _ in range(N))
-                    visited[s] = True
+                    seen = list(False for _ in range(N))
+                    seen[s] = True
                     Q.insert(s)
                     update_path2 = False
 
@@ -214,8 +249,9 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
 
         
         else:
+            time.sleep(1)
             cur = t
-            while s != cur:
+            while cur != s:
                 pred = flow_to1[cur]
                 S.insert((pred,cur))
                 cur = pred
@@ -223,11 +259,14 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1):
             while S.not_empty():
                 node1,node2 = S.pop()
                 arrow(screen,node_position[node1],node_position[node2],Flame,Dark_red,10,7)
-                time.sleep(0.01)
+                time.sleep(0.3)
 
             cur = t
             while cur != s:
                 pred = flow_to2[cur]
-                arrow(screen,node_position[pred],node_position[cur],Flame,Dark_red,10,7)
-                time.sleep(0.01)
+                arrow(screen,node_position[cur],node_position[pred],Flame,Dark_red,10,7)
+                time.sleep(0.3)
                 cur = pred
+
+            pause = True
+            continue

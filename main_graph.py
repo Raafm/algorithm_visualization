@@ -1,4 +1,4 @@
-algorithm = 2
+algorithm = 7
 
 
 #bfs
@@ -54,3 +54,11 @@ if algorithm == 6:
     from graph.normal import graph,node_list
 
     kruskal(graph,node_list,steps_mode = False)
+
+if algorithm == 7:
+    from algorithms.cyclewith2nodes import cycleWith2Nodes
+    from graph.normal import graph,node_list
+    s = 0
+    t = 10
+
+    cycleWith2Nodes(graph, node_list,s,t)
