@@ -55,6 +55,7 @@ if algorithm == 6:
 
     kruskal(graph,node_list,steps_mode = False)
 
+# cycle with two given nodes
 if algorithm == 7:
     from algorithms.cyclewith2nodes import cycleWith2Nodes
     from graph.normal import graph,node_list

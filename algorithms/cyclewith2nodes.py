@@ -18,7 +18,7 @@ def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),
 
 
 def memorize(screen,node_center,radius=10,Time = 0.1,show=True):
-    pygame.draw.circle(screen,(255,0,0),node_center,radius)
+    pygame.draw.circle(screen,(0,0,255),node_center,radius)
 
     if show:
         pygame.display.update()
@@ -36,8 +36,8 @@ def visit(screen,node_center,visit_color = (0,255,0),radius = 10,show=True,Time 
 
 
 def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
-    Yellow = (255,255,0)
-    pygame.draw.circle(screen, Yellow , node_center , radius)
+    Cyan = (0,255,255)
+    pygame.draw.circle(screen, Cyan , node_center , radius)
 
     
 
