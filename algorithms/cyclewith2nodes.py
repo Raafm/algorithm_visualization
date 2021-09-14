@@ -78,7 +78,7 @@ def change(screen,node_center,show=True,Time = 0.1,):
         pygame.draw.circle(screen, color, node_center , 12)
         pygame.draw.circle(screen, color, node_center , 10)
 
-        font = pygame.font.Font('freesansbold.ttf',12)
+        font = pygame.font.Font('freesansbold.ttf',13)
         text = font.render("s",True,Flame)                        
         screen.blit(text,text.get_rect(center = node_center))
 
@@ -247,12 +247,12 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                 
             
             cur = Q.pop()
-            visit(screen,node_position[cur%N],radius = 14,Time = 0.3)
+            visit(screen,node_position[cur%N],radius = 14,Time = 0.1)
             for neighbour in graph[cur]:
                 if predecessor[neighbour] < 0: # has not seen the node
                     Q.insert(neighbour)
                     predecessor[neighbour] = cur
-                    memorize(screen,node_position[neighbour%N],Time = 0.1,sender_on = (neighbour >= N) )
+                    memorize(screen,node_position[neighbour%N],Time = 0.05,sender_on = (neighbour >= N) )
                 
                     if neighbour == t:
                         bfs = False
@@ -261,11 +261,11 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                         break
             
             mark(screen,node_position[cur%N],Black,radius = 14,show = False)
-            visited(screen,node_position[cur%N],radius = 12,Time = 0.1)    
-            if cur < N:        
+            visited(screen,node_position[cur%N],radius = 12,Time = 0.01)    
+            if cur < N and flow_to[cur] < 0:        
                 change(screen,node_position[cur%N],Time = 0.1)
             
-            time.sleep(0.2)
+            time.sleep(0.02)
 
 
             
@@ -339,7 +339,7 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                 predecessor = list(-1 for _ in range(2*N))
                 predecessor[s] = s
                 Q = queue()
-                Q.insert(s)
+                start = True
 
                 first_iteration = False
                 path = False
