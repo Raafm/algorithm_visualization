@@ -75,6 +75,7 @@ def change(screen,node_center,show=True,Time = 0.1,):
         Blue = (0,0,255)
         color = Blue
 
+        pygame.draw.circle(screen, color, node_center , 12)
         pygame.draw.circle(screen, color, node_center , 10)
 
         font = pygame.font.Font('freesansbold.ttf',12)
@@ -117,7 +118,7 @@ def display_graph(screen,graph,N,node_position,s,t,edges_animation = False,first
                     text = font.render("T",True,Dark_yellow)                        
                     screen.blit(text,text.get_rect(center = node_center))
                 pygame.display.update()
-                time.sleep(0.05)
+                time.sleep(0.02)
 
     #print nodes
     for node in range(N):
@@ -246,7 +247,7 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                 
             
             cur = Q.pop()
-            visit(screen,node_position[cur%N],radius = 14,Time = 0.1)
+            visit(screen,node_position[cur%N],radius = 14,Time = 0.3)
             for neighbour in graph[cur]:
                 if predecessor[neighbour] < 0: # has not seen the node
                     Q.insert(neighbour)
@@ -263,6 +264,8 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
             visited(screen,node_position[cur%N],radius = 12,Time = 0.1)    
             if cur < N:        
                 change(screen,node_position[cur%N],Time = 0.1)
+            
+            time.sleep(0.2)
 
 
             
@@ -347,7 +350,8 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
             else:
                 cycle = True
                 path = False
-                mark(screen,node_position[t],Blue,12,)
+                mark(screen,node_position[t],Dark_yellow,12)
+                mark(screen,node_position[s],Dark_yellow,12)
                 time.sleep(1.5)
         
 
