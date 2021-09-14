@@ -17,10 +17,19 @@ def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),
     pygame.display.update()
 
 
-def memorize(screen,node_center,radius=10,Time = 0.1,show=True):
+def memorize(screen,node_center,radius=10,Time = 0.1,show=True,sender_on = False):
     Springgreen	    =       (0,255,127)
+    Flame           =       (226, 88, 34)
     pygame.draw.circle(screen,Springgreen,node_center,radius)
-
+    
+    if sender_on:
+        font = pygame.font.Font('freesansbold.ttf',15)
+        text = font.render("s",True,Flame)                        
+        screen.blit(text,text.get_rect(center = node_center))
+    else:
+        font = pygame.font.Font('freesansbold.ttf',15)
+        text = font.render("r",True,Flame)                        
+        screen.blit(text,text.get_rect(center = node_center))
     if show:
         pygame.display.update()
         time.sleep(Time)
@@ -48,15 +57,83 @@ def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
 
 
 
-def mark(screen,node_center,color,radius=8,show=True,Time = 0.1):
+def mark(screen,node_center,color,radius=8,show=True,Time = 0.1,text = None,text_color = (226, 88, 34)):
 
     pygame.draw.circle(screen, color, node_center , radius)
+    
+    if text is not None:
+        font = pygame.font.Font('freesansbold.ttf',15)
+        text = font.render(text,True,text_color)                        
+        screen.blit(text,text.get_rect(center = node_center))
     if show:
         pygame.display.update()
         time.sleep(Time)
 
+
+def change(screen,node_center,show=True,Time = 0.1,):
+        Flame = (226, 88, 34)
+        Blue = (0,0,255)
+        color = Blue
+
+        pygame.draw.circle(screen, color, node_center , 10)
+
+        font = pygame.font.Font('freesansbold.ttf',12)
+        text = font.render("s",True,Flame)                        
+        screen.blit(text,text.get_rect(center = node_center))
+
+        if show:
+            pygame.display.update()
+            time.sleep(Time)
+            pygame.display.update()
+
+
+
+def display_graph(screen,graph,N,node_position,s,t,edges_animation = False,first_display = True):
+    N2 = len(graph)
+
+    White       = (255, 255, 255)
+    Blue        = (0, 0, 200)
+    Dark_yellow = (250, 200, 0)
+    Flame       = (226, 88, 34)
+    #print edges
+    for node in range(N2):
+        for neighbour in graph[node]:
+            pygame.draw.line(screen,White,node_position[node%N],node_position[neighbour%N],1)
+                   
+            if edges_animation:
+                if node != s and node != t:
+                    node_center = node_position[node%N]
+                    font = pygame.font.Font('freesansbold.ttf',15)
+                    text = font.render("s",True,Flame)                        
+                    screen.blit(text,text.get_rect(center = node_center))
+                elif node == s:
+                    node_center = node_position[node%N]
+                    font = pygame.font.Font('freesansbold.ttf',15)
+                    text = font.render("S",True,Dark_yellow)                        
+                    screen.blit(text,text.get_rect(center = node_center))
+                else:
+                    node_center = node_position[node%N]
+                    font = pygame.font.Font('freesansbold.ttf',15)
+                    text = font.render("T",True,Dark_yellow)                        
+                    screen.blit(text,text.get_rect(center = node_center))
+                pygame.display.update()
+                time.sleep(0.05)
+
+    #print nodes
+    for node in range(N):
+        if first_display:
+            mark(screen,node_position[node],Blue,12,False)
+        else:
+            mark(screen,node_position[node],Blue,12,False,text = "r")
+
+    mark(screen,node_position[s],Dark_yellow,12,False,text = "S",text_color = Flame)
+    mark(screen,node_position[t],Dark_yellow,12,False,text = "T",text_color = Flame)
+
+    pygame.display.update()
+    if edges_animation: time.sleep(1.5)
+
 def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
-    from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,royalblue,Black,Springgreen,Green,Lime,Cream,Dark_yellow
+    from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,royalblue,Black,Springgreen,Green,Lime,Cream,Dark_yellow,Yellow
     from algorithms.data_struct.queue import queue
     from algorithms.data_struct.stack import stack
 
@@ -69,16 +146,7 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
     screen.fill((0,0,0))    
 
     N = len(graph) #number of nodes in the graph
-
-    #print edges
-    for node in range(N):
-        for neighbour in graph[node]:
-            pygame.draw.line(screen,White,node_position[node],node_position[neighbour],1)
-    #print nodes
-    for node in range(N):
-        mark(screen,node_position[node],Blue,12,False)
-
-    pygame.display.update()
+    display_graph(screen,graph,N,node_position,s,t)
 
     for _ in range(N):
         graph.append([])
@@ -94,11 +162,42 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
     for neighbour in temp_list:
         graph[t].append(neighbour+N)
 
+
+
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("Find smallest cycle",True,Dark_yellow)                        
+    screen.blit(text,text.get_rect(center = (950,70)))
+    
+    text = font.render("with the 2 yellow nodes",True,Dark_yellow)                        
+    screen.blit(text,text.get_rect(center = (950,90)))
+    
+    pygame.display.update()
+    time.sleep(2)
+
+
+
+    # ALGORITHM STARTS HERE
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("Split each not yellow node",True,White) 
+    screen.blit(text,text.get_rect(center = (950,150)))
+    pygame.display.update()
+    time.sleep(2)
+    text = font.render("in sender and receiver nodes",True,White)                        
+    screen.blit(text,text.get_rect(center = (950,170)))
+    pygame.display.update()
+    time.sleep(2)
+
+    pygame.draw.rect(screen,Black,(0,0,800,2000))
+    display_graph(screen,graph,N,node_position,s,t,edges_animation=True,first_display=False)
+    pygame.draw.rect(screen,Black,(800,130,500,200))
+    time.sleep(1)
+
     predecessor = list( -1 for _ in range(2*N))
+    predecessor[s] = s
     flow_to = list( -1 for _ in range(2*N))
     Q = queue()
-    Q.insert(s)
-
+    
+    start = True
     bfs = True
     path = False
     cycle = False
@@ -129,17 +228,44 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
 
 
         if bfs:
+            
+            if start:
+
+                font = pygame.font.Font('freesansbold.ttf',20)
+                text = font.render("First BFS",True,Cyan) 
+                screen.blit(text,text.get_rect(center = (950,150)))
+                text = font.render("Searching augmenting path",True,royalblue)                        
+                screen.blit(text,text.get_rect(center = (950,170)))
+                pygame.display.update()
+                time.sleep(2)
+                for neighbour in graph[s]:
+                    Q.insert(neighbour)
+                    predecessor[neighbour] = s
+                    memorize(screen,node_position[neighbour],Time = 0.1,sender_on= False)
+                start = False
+                
+            
             cur = Q.pop()
-            visit(screen,node_position[cur%N],Time = 0.01)
+            visit(screen,node_position[cur%N],radius = 14,Time = 0.1)
             for neighbour in graph[cur]:
                 if predecessor[neighbour] < 0: # has not seen the node
                     Q.insert(neighbour)
                     predecessor[neighbour] = cur
-                    memorize(screen,node_position[neighbour%N],Time = 0.01)
-                    if cur == t:
+                    memorize(screen,node_position[neighbour%N],Time = 0.1,sender_on = (neighbour >= N) )
+                
+                    if neighbour == t:
                         bfs = False
                         path = True
-            visited(screen,node_position[cur%N],Time = 0.01)
+                        time.sleep(1.5)
+                        break
+            
+            mark(screen,node_position[cur%N],Black,radius = 14,show = False)
+            visited(screen,node_position[cur%N],radius = 12,Time = 0.1)    
+            if cur < N:        
+                change(screen,node_position[cur%N],Time = 0.1)
+
+
+            
 
 
 
@@ -173,12 +299,12 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                     node1,node2 = -node1,-node2
                     pygame.draw.line(screen,Black,node_position[node1%N], node_position[node2%N],5)
                     pygame.draw.line(screen,White,node_position[node1%N], node_position[node2%N],1)
-                    mark(screen,node_position[node1%N],Blue,12)
-                    mark(screen,node_position[node2%N],Blue,12)
+                    mark(screen,node_position[node1%N],Blue,radius = 14)
+                    mark(screen,node_position[node2%N],Blue,radius = 14)
                     pygame.display.update()
                 else:
                     arrow(screen,node_position[node1%N],node_position[node2%N],royalblue,White,5,5)
-               
+                    mark(screen,node_position[node1%N],Blue,radius = 14)
                 time.sleep(0.3)
 
             if first_iteration == True:
@@ -208,21 +334,26 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
                 first_flow_to_t = flow_to[t]
                 flow_to[t] = -1
                 predecessor = list(-1 for _ in range(2*N))
+                predecessor[s] = s
                 Q = queue()
                 Q.insert(s)
 
                 first_iteration = False
                 path = False
                 bfs = True
+                time.sleep(1.5)
 
 
             else:
                 cycle = True
                 path = False
+                mark(screen,node_position[t],Blue,12,)
+                time.sleep(1.5)
         
 
 
         elif cycle:
+            
 #            cur = t
 #            S = stack()
 #            while cur != s:
