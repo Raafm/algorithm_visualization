@@ -56,7 +56,7 @@ def mark(screen,node_center,color,radius=8,show=True,Time = 0.1):
         time.sleep(Time)
 
 def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
-    from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,royalblue,Black,Springgreen,Green,Lime
+    from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,royalblue,Black,Springgreen,Green,Lime,Cream,Dark_yellow
     from algorithms.data_struct.queue import queue
     from algorithms.data_struct.stack import stack
 
@@ -76,7 +76,7 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
             pygame.draw.line(screen,White,node_position[node],node_position[neighbour],1)
     #print nodes
     for node in range(N):
-        mark(screen,node_position[node],Blue,10,False)
+        mark(screen,node_position[node],Blue,12,False)
 
     pygame.display.update()
 
@@ -146,43 +146,76 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
         elif path:
             cur = t
             S = stack()
+            
+            path_edge_dict = {}
+
             while cur != s:
                 pred = predecessor[cur]
                 S.insert((pred,cur)) # insert to make a good animation latter
+                path_edge_dict[(pred,cur)] = True
+
                 #reverse edge
                 graph[cur].append(pred) 
                 graph[pred].remove(cur)
                 
-                if flow_to[pred] !=  cur: flow_to[cur] = pred
+                if flow_to[pred] == cur:  #counter flux
+                    S.pop()
+                    S.insert((-pred,-cur))
+                else:
+                    flow_to[cur] = pred
                 
                 cur = pred
-
+            
+           
             while S.not_empty(): # animation showing path
                 node1,node2 = S.pop()
-                arrow(screen,node_position[node1%N],node_position[node2%N])
+                if node1 < 0 or node2 < 0:
+                    node1,node2 = -node1,-node2
+                    pygame.draw.line(screen,Black,node_position[node1%N], node_position[node2%N],5)
+                    pygame.draw.line(screen,White,node_position[node1%N], node_position[node2%N],1)
+                    mark(screen,node_position[node1%N],Blue,12)
+                    mark(screen,node_position[node2%N],Blue,12)
+                    pygame.display.update()
+                else:
+                    arrow(screen,node_position[node1%N],node_position[node2%N],royalblue,White,5,5)
+               
                 time.sleep(0.3)
 
             if first_iteration == True:
+                
+                pygame.draw.rect(screen,Black,(0,0,2000,2000))
+                #print edges
+                for node in range(2*N):
+                    for neighbour in graph[node]:
+                        if ( (neighbour,node) not in path_edge_dict ) and ( (node,neighbour) not in path_edge_dict ):  
+                            pygame.draw.line(screen,White,node_position[node%N],node_position[neighbour%N],1)
+                        
+
+                path_edge_dict = {}
+                
+                cur = t
+                while cur != s:
+                    pred = predecessor[cur]
+                    pygame.draw.line(screen,royalblue,node_position[cur%N],node_position[pred%N],5)
+                    cur = pred
+
+                #print nodes
+                for node in range(N):
+                    mark(screen,node_position[node%N],Blue,12,False)
+
+                pygame.display.update()
+
                 first_flow_to_t = flow_to[t]
                 flow_to[t] = -1
                 predecessor = list(-1 for _ in range(2*N))
                 Q = queue()
                 Q.insert(s)
 
-                #print edges
-                for node in range(N):
-                    for neighbour in graph[node]:
-                        pygame.draw.line(screen,White,node_position[node%N],node_position[neighbour%N],1)
-                #print nodes
-                for node in range(N):
-                    mark(screen,node_position[node%N],Blue,10,False)
-
-                pygame.display.update()
-
-
                 first_iteration = False
                 path = False
                 bfs = True
+
+
             else:
                 cycle = True
                 path = False
@@ -190,25 +223,25 @@ def cycleWith2Nodes(graph,node_position,s = 0,t = 1,steps_mode = False):
 
 
         elif cycle:
-            cur = t
-            S = stack()
-            while cur != s:
-                pred = flow_to[cur]
-                S.insert((pred,cur))
-                cur = pred
-           
-            while S.not_empty():
-                node1,node2 = S.pop()
-                arrow(screen,node_position[node1%N],node_position[node2%N],Flame,Dark_red,6,4)
-                time.sleep(0.3)
-            
-            cur = first_flow_to_t
-            arrow(screen,node_position[t],node_position[cur%N])
-            while cur != s:
-                node2,node1 = flow_to[cur],cur
-                arrow(screen,node_position[node1%N],node_position[node2%N],Flame,Dark_red,6,4)
-                cur = flow_to[cur]
-                time.sleep(0.3)
+#            cur = t
+#            S = stack()
+#            while cur != s:
+#                pred = flow_to[cur]
+#                S.insert((pred,cur))
+#                cur = pred
+#           
+#            while S.not_empty():
+#                node1,node2 = S.pop()
+#                arrow(screen,node_position[node1%N],node_position[node2%N],Lime,Green,6,4)
+#                time.sleep(0.3)
+#            
+#            cur = first_flow_to_t
+#            arrow(screen,node_position[t],node_position[cur%N])
+#            while cur != s:
+#                node2,node1 = flow_to[cur],cur
+#                arrow(screen,node_position[node1%N],node_position[node2%N],Lime,Green,6,4)
+#                cur = flow_to[cur]
+#                time.sleep(0.3)
             
             cycle = False
             pause = True
