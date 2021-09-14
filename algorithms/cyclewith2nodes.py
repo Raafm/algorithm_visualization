@@ -72,8 +72,8 @@ def mark(screen,node_center,color,radius=8,show=True,Time = 0.1,text = None,text
 
 def change(screen,node_center,show=True,Time = 0.1,):
         Flame = (226, 88, 34)
-        Blue = (0,0,255)
-        color = Blue
+        skyblue	        =       (135,206,235)
+        color = skyblue
 
         pygame.draw.circle(screen, color, node_center , 12)
         pygame.draw.circle(screen, color, node_center , 10)
