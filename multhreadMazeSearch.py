@@ -1,4 +1,5 @@
 from algorithms.data_struct.queue import queue
+from algorithms.data_struct.stack import stack
 from graph.Maze_Dense import labirinth as maze   
 import pygame,time
 from graph.color import *
@@ -59,7 +60,7 @@ def display_maze():
     
     
     font = pygame.font.Font('freesansbold.ttf',25)
-    text = font.render("Find shortest path",True, Lime)                      
+    text = font.render("Find a path",True, Lime)                      
     screen.blit(text,text.get_rect(center = (800,100)))
 
     font = pygame.font.Font('freesansbold.ttf',25)
@@ -73,6 +74,23 @@ def display_maze():
     text = font.render("4 Threads searching",True,White)                      
     screen.blit(text,text.get_rect(center = (800,200)))
 
+    font = pygame.font.Font('freesansbold.ttf',30)
+    text = font.render("BFS",True,Blue)                      
+    screen.blit(text,text.get_rect(center = (50,30)))
+    
+
+    text = font.render("BFS",True,Cyan)                      
+    screen.blit(text,text.get_rect(center = (560,30)))
+
+    
+
+    text = font.render("DFS",True,Dark_red)                      
+    screen.blit(text,text.get_rect(center = (50,570)))
+    
+
+    text = font.render("DFS",True,Dark_yellow)                      
+    screen.blit(text,text.get_rect(center = (560,570)))
+
     pygame.display.update()
 
     time.sleep(1)
@@ -82,14 +100,15 @@ seen      = list( list( False  for _ in range(COLS) ) for _ in range(ROWS) )
 mutex_pos = list( list( Lock() for _ in range(COLS) ) for _ in range(ROWS) )
 found = False
 
-def runner(arg1,arg2):
+def runner(arg1,arg2,arg3,arg4):
     global found
     N_layer = 1
     missing = 0
     color , source = arg1,arg2
     predecessor =  list( list( ( -1 , -1 ) for _ in range(COLS) ) for _ in range(ROWS) )
     seen[source[0]][source[1]] = True
-    Q = queue() 
+    Q = arg3 
+    delay = arg4
 
     skip = False
     I_found = False
@@ -97,7 +116,7 @@ def runner(arg1,arg2):
     current = source
     Q.insert(source)
     see_neighbours = False
-    delay = 0.025
+
     pause = False
     running =  True
     while running :
@@ -121,7 +140,7 @@ def runner(arg1,arg2):
         if not see_neighbours and not found:
 
             pygame.display.update()
-            time.sleep(0.01)
+            time.sleep(delay)
             if Q.not_empty():
                 missing -= 1
                 current = Q.pop()
@@ -221,11 +240,15 @@ def runner(arg1,arg2):
 
 
 if __name__ == "__main__":
+    Q1 = queue()
+    Q2 = queue()
+    S1 = stack()
+    S2 = stack() 
 
-    NO = Thread(target=runner, args = (Blue,(1,1))           )
-    NE = Thread(target=runner, args = (Cyan,(COLS-1,1))        )
-    SE = Thread(target=runner, args = (Dark_red,(1,ROWS-1)) )
-    SO = Thread(target=runner, args = (Dark_yellow,(COLS-1,ROWS-1))        )
+    NO = Thread(target=runner, args = ( Blue,    (1,1)    ,     Q1        , 0.01 )   )
+    NE = Thread(target=runner, args = ( Cyan,(COLS-1,1)       ,    Q2     , 0.01 )   )
+    SE = Thread(target=runner, args = ( Dark_red,(1,ROWS-1)    ,     S1   , 0.03 )   )
+    SO = Thread(target=runner, args = ( Dark_yellow,(COLS-1,ROWS-1),   S2 , 0.03  )   )
 
     NO.start()
     NE.start()
