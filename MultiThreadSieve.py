@@ -224,7 +224,7 @@ def crive_operator(args):
 
 
             if is_prime[element] == true:
-                pygame.draw.rect(screen, walk, (840,145+100*id ,60, 60))    # erase what was before in the island couting
+                pygame.draw.rect(screen, walk, (840,145+100*id ,60, 60))    # erase what was before in the prime 
                 font = pygame.font.Font('freesansbold.ttf',20)
                 text = font.render(str(element) ,True, thread_color[id])                      
                 screen.blit(text,text.get_rect(center = (870,180+100*id)))

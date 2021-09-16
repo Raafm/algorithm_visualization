@@ -24,7 +24,7 @@ COLS = len(maze[0])
 
 White = (255,255,255)
 Black = ( 0 , 0 , 0 )
-
+Blue = (100,100,255)
 
 def remove_queue(i,j,color):
     if maze[i][j] != Lime:
@@ -48,7 +48,17 @@ def insert_queue(i,j,color):
 def display_maze():
     N = len(maze)
     print(N)
+    #improving the maze for better animation
     maze[ROWS//2][COLS//2] = maze[ROWS//2 +1][COLS//2 +1] = maze[ROWS//2 +1][COLS//2] = maze[ROWS//2][COLS//2 +1] = Green
+    maze[ROWS//2+2][COLS//2+5] = maze[ROWS//2+1][COLS//2+4] = maze[ROWS//2+2][COLS//2-2] = White
+    maze[ROWS//2-5][COLS//2+4] = maze[ROWS//2-2][COLS//2+6] = White
+    maze[1][COLS-7] = Black
+    maze[1][COLS-40] = White
+    maze[14][COLS-22] = Black
+    maze[40][COLS-48] = White
+    maze[38][COLS-48] = White
+    maze[38][COLS-42] = White
+
     for x in range(N):
         time.sleep(0.01)
         for y in range(N):
@@ -61,18 +71,22 @@ def display_maze():
     
     font = pygame.font.Font('freesansbold.ttf',25)
     text = font.render("Find a path",True, Lime)                      
-    screen.blit(text,text.get_rect(center = (800,100)))
+    screen.blit(text,text.get_rect(center = (800,50)))
 
     font = pygame.font.Font('freesansbold.ttf',25)
     text = font.render("from source to a corner",True, Lime)                      
-    screen.blit(text,text.get_rect(center = (800,150)))
+    screen.blit(text,text.get_rect(center = (800,75)))
  
     pygame.display.update()
     time.sleep(3)
 
-    font = pygame.font.Font('freesansbold.ttf',25)
+    font = pygame.font.Font('freesansbold.ttf',20)
     text = font.render("4 Threads searching",True,White)                      
-    screen.blit(text,text.get_rect(center = (800,200)))
+    screen.blit(text,text.get_rect(center = (800,125)))
+
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("N° houses visited:",True,White)                      
+    screen.blit(text,text.get_rect(center = (800,175)))
 
     font = pygame.font.Font('freesansbold.ttf',30)
     text = font.render("BFS",True,Blue)                      
@@ -100,16 +114,15 @@ seen      = list( list( False  for _ in range(COLS) ) for _ in range(ROWS) )
 mutex_pos = list( list( Lock() for _ in range(COLS) ) for _ in range(ROWS) )
 found = False
 
-def runner(arg1,arg2,arg3,arg4):
+def runner(arg0,arg1,arg2,arg3,arg4):
     global found
-    N_layer = 1
-    missing = 0
-    color , source = arg1,arg2
+    id,color , source = arg0,arg1,arg2
     predecessor =  list( list( ( -1 , -1 ) for _ in range(COLS) ) for _ in range(ROWS) )
     seen[source[0]][source[1]] = True
     Q = arg3 
     delay = arg4
 
+    N_visited = 0
     skip = False
     I_found = False
     
@@ -142,8 +155,12 @@ def runner(arg1,arg2,arg3,arg4):
             pygame.display.update()
             time.sleep(delay)
             if Q.not_empty():
-                missing -= 1
                 current = Q.pop()
+                N_visited += 1
+                pygame.draw.rect(screen, (30,30,30), (750,225+100*id ,60, 60))    # erase what was before in the prime 
+                font = pygame.font.Font('freesansbold.ttf',20)
+                text = font.render(str(N_visited) ,True, color)                      
+                screen.blit(text,text.get_rect(center = (780,260+100*id)))
 
                 
             else:
@@ -245,10 +262,10 @@ if __name__ == "__main__":
     S1 = stack()
     S2 = stack() 
 
-    NO = Thread(target=runner, args = ( Blue,    (1,1)    ,     Q1        , 0.01 )   )
-    NE = Thread(target=runner, args = ( Cyan,(COLS-1,1)       ,    Q2     , 0.01 )   )
-    SE = Thread(target=runner, args = ( Dark_red,(1,ROWS-1)    ,     S1   , 0.03 )   )
-    SO = Thread(target=runner, args = ( Dark_yellow,(COLS-1,ROWS-1),   S2 , 0.03  )   )
+    NO = Thread(target=runner, args = ( 0, Blue,    (1,1)    ,     Q1        , 0.02 )   )
+    NE = Thread(target=runner, args = ( 1, Cyan,(COLS-1,1)       ,    Q2     , 0.02 )   )
+    SE = Thread(target=runner, args = ( 2, Dark_red,(1,ROWS-1)    ,     S1   , 0.02 )   )
+    SO = Thread(target=runner, args = ( 3, Dark_yellow,(COLS-1,ROWS-1),   S2 , 0.02 )   )
 
     NO.start()
     NE.start()
