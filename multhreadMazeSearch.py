@@ -262,10 +262,10 @@ if __name__ == "__main__":
     S1 = stack()
     S2 = stack() 
 
-    NO = Thread(target=runner, args = ( 0, Blue,    (1,1)    ,     Q1        , 0.02 )   )
-    NE = Thread(target=runner, args = ( 1, Cyan,(COLS-1,1)       ,    Q2     , 0.02 )   )
-    SE = Thread(target=runner, args = ( 2, Dark_red,(1,ROWS-1)    ,     S1   , 0.02 )   )
-    SO = Thread(target=runner, args = ( 3, Dark_yellow,(COLS-1,ROWS-1),   S2 , 0.02 )   )
+    NO = Thread(target=runner, args = ( 0, Blue,    (1,1)    ,     Q1        , 0.01 )   )
+    NE = Thread(target=runner, args = ( 1, Cyan,(COLS-1,1)       ,    Q2     , 0.01 )   )
+    SE = Thread(target=runner, args = ( 2, Dark_red,(1,ROWS-1)    ,     S1   , 0.01 )   )
+    SO = Thread(target=runner, args = ( 3, Dark_yellow,(COLS-1,ROWS-1),   S2 , 0.01 )   )
 
     NO.start()
     NE.start()
