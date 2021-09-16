@@ -1,7 +1,7 @@
 from algorithms.data_struct.queue import queue
 from algorithms.data_struct.stack import stack
 from graph.Maze_Dense import labirinth as maze   
-import pygame,time
+import pygame,time,random
 from graph.color import *
 from threading import Thread,Lock
 
@@ -151,8 +151,8 @@ def runner(arg0,arg1,arg2,arg3,arg4):
             continue
 
         if not see_neighbours and not found:
-
-            pygame.display.update()
+            if random.randint(0,5) ==0:
+                pygame.display.update()
             time.sleep(delay)
             if Q.not_empty():
                 current = Q.pop()
