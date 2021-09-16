@@ -151,8 +151,8 @@ def runner(arg0,arg1,arg2,arg3,arg4):
             continue
 
         if not see_neighbours and not found:
-            if random.randint(0,5) ==0:
-                pygame.display.update()
+            
+            pygame.display.update()
             time.sleep(delay)
             if Q.not_empty():
                 current = Q.pop()
