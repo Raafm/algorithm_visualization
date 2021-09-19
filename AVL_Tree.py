@@ -12,7 +12,7 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
 
-def mark(screen,node_center,color,radius=4,show=True,Time = 0.07,text = None,text_color = (226, 88, 34)):
+def mark(screen,node_center,color,radius=4,show=True,Time = 0.03,text = None,text_color = (226, 88, 34)):
 
     pygame.draw.circle(screen, color, node_center , radius)
     
@@ -24,11 +24,11 @@ def mark(screen,node_center,color,radius=4,show=True,Time = 0.07,text = None,tex
         pygame.display.update()
         time.sleep(Time)
 
-def inserting(screen,position):
-    mark(screen,position,Lime)
+def inserting(screen,position,Time):
+    mark(screen,position,Lime,Time = Time)
 
-def visiting(screen,position):
-    mark(screen,position,Blue)
+def visiting(screen,position,Time):
+    mark(screen,position,Blue,Time = Time)
 
 class Node:
     def __init__(self,key,position):
@@ -40,10 +40,11 @@ class Node:
 
 
 class AVLtree:
-    def __init__(self,screen):
+    def __init__(self,screen,Time):
         self.root = None
         self.N_nodes = 0
         self.screen = screen
+        self.time = Time
 
     def insert(self,key):
         self.N_nodes+=1
@@ -64,8 +65,8 @@ class AVLtree:
         position = (x,y)
 
         if root is None:
-            inserting(self.screen,position)
-            time.sleep(0.06)
+            inserting(self.screen,position,self.time)
+            time.sleep(0.1)
             return Node(key,position),True
         
         root.position = position
@@ -75,18 +76,24 @@ class AVLtree:
             
             l,r,y = position
             m = (l+r)//2
-            visiting(self.screen,(m,y))
+            visiting(self.screen,(m,y),self.time)
             y += h
             position = m,r,y
+            if root.right is None: 
+                pygame.draw.line(self.screen,White,(m,y-h),((m+r)//2,y),1)
+                pygame.display.update()
             root.right,valid = self._internalInsertion(root.right,key,position,valid)
 
         elif root.key > key:
             
             l,r,y = position
             m = (l+r)//2
-            visiting(self.screen, (m,y) )
+            visiting(self.screen, (m,y),self.time )
             y += h
             position = l,m,y
+            if root.right is None: 
+                pygame.draw.line(self.screen,White,(m,y-h),((m+l)//2,y),1)
+                pygame.display.update()
             root.left,valid = self._internalInsertion(root.left,key,position,valid)
         else: return root,not valid #don't allow 2 nodes with same key
         
@@ -98,13 +105,19 @@ class AVLtree:
         
         #left
         if balance < -1:
+            mark(self.screen,root.position,Yellow,Time=self.time)
             if key > root.left.key: #left-right, else: left-left
                 root.left =  self._leftRotate(root.left)
+                self.display_tree()
+                time.sleep(self.time)
             return self._rightRotate(root),True
         #right
         if balance > 1:
+            mark(self.screen,root.position,Light_sky,Time = self.time)
             if key < root.right.key: #right-left, else: right-right
-               root.right = self._rightRotate(root.right)
+                root.right = self._rightRotate(root.right)
+                self.display_tree()
+                time.sleep(self.time)
             return self._leftRotate(root),True
         
         return root,True
@@ -112,6 +125,11 @@ class AVLtree:
     def display_tree(self):
         pygame.draw.rect(self.screen,Black,(0,0,screen_width-100,2000))
         self._display_tree(self.root,x0,screen_width-100,y0)
+
+        font = pygame.font.Font('freesansbold.ttf',25)
+        text = font.render("AVL Tree",True,Cyan)                         
+        screen.blit(text,text.get_rect(center = (1000,20)))
+
         pygame.display.update()
         
 
@@ -147,29 +165,20 @@ class AVLtree:
     def _rightRotate(self,node):
         LEFT = node.left
         LEFT.right,node.left = node,LEFT.right
-        
-        mark(self.screen,node.position,Cyan,show=False)
-        mark(self.screen,LEFT.position,Yellow)
-       
+
         self._updateHeight(node)
-        self._updateHeight(LEFT)
-        mark(self.screen,node.position,White,show=False)
-        mark(self.screen,LEFT.position,White,show=False)
-        
+        self._updateHeight(LEFT)   
+
         return LEFT #return so to parent node can link to the new subroot
 
     def _leftRotate(self,node):
         RIGHT = node.right
         RIGHT.left,node.right = node,RIGHT.left
-
-        mark(self.screen,node.position,Cyan,show=False)
-        mark(self.screen,RIGHT.position,Yellow)
         
         self._updateHeight(node)
         self._updateHeight(RIGHT)
 
-        mark(self.screen,node.position,White,show=False)
-        mark(self.screen,RIGHT.position,White,show=False)
+
         return RIGHT
 
     def _inOrder(self,node):
@@ -180,11 +189,12 @@ class AVLtree:
 
 
 
+treeSlow = AVLtree(screen,0.6)
+treeFast = AVLtree(screen,0.01)
+number = list(range(1,16))
 
-tree = AVLtree(screen)
-
-number = list(range(1,251))
-
+slow = True
+fast = False
 pause = False
 while True:
 
@@ -204,12 +214,50 @@ while True:
     
     if pause:
         continue
+
+    if slow:
+
+        if len(number):
+            r=random.randint(0, len(number)-1)
+            num = number[r]
+            number.pop(r)
+            treeSlow.insert(num)
+            treeSlow.display_tree()
+            
+        else:
+            number = list(range(0,251))
+            slow = False
+            fast = True
+            
+            pygame.draw.rect(screen,Black,(0,0,screen_width-100,2000))# clear screen
+            font = pygame.font.Font('freesansbold.ttf',25)
+            text = font.render("AVL Tree",True,Cyan)                         
+            screen.blit(text,text.get_rect(center = (1000,40)))
+
+            font = pygame.font.Font('freesansbold.ttf',50)
+            text = font.render("Fast animation",True,Cyan)                         
+            screen.blit(text,text.get_rect(center = ((screen_width-100)//2,screen_height//2)))
+            text = font.render("random insertions",True,Cyan)                         
+            screen.blit(text,text.get_rect(center = ((screen_width-100)//2,screen_height//2+50)))
+            pygame.display.update()
+            time.sleep(3)
+            pygame.draw.rect(screen,Black,(0,0,screen_width-100,2000))
+            pygame.display.update()
+        time.sleep(0.5)
     
-    if len(number):
-        r=random.randint(0, len(number)-1)
-        num = number[r]
-        number.pop(r)
-        tree.insert(num)
-        tree.display_tree()
-    else: pause = True
-        
+    if fast:
+
+        if len(number):
+            r=random.randint(0, len(number)-1)
+            num = number[r]
+            number.pop(r)
+            treeFast.insert(num)
+            treeFast.display_tree()
+            
+        else:
+            pause = True
+
+
+        time.sleep(0.01)
+
+    
