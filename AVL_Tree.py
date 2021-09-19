@@ -3,9 +3,7 @@ from graph.color import *
 
 pygame.init()
 
-forget = (1,0,0)
-
-h = 80
+h = 70
 x0 = 20
 y0 = 20
 screen_height = 700
@@ -14,7 +12,7 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
 
-def mark(screen,node_center,color,radius=4,show=True,Time = 0.02,text = None,text_color = (226, 88, 34)):
+def mark(screen,node_center,color,radius=4,show=True,Time = 0.07,text = None,text_color = (226, 88, 34)):
 
     pygame.draw.circle(screen, color, node_center , radius)
     
@@ -67,7 +65,7 @@ class AVLtree:
 
         if root is None:
             inserting(self.screen,position)
-
+            time.sleep(0.06)
             return Node(key,position),True
         
         root.position = position
@@ -150,18 +148,28 @@ class AVLtree:
         LEFT = node.left
         LEFT.right,node.left = node,LEFT.right
         
+        mark(self.screen,node.position,Cyan,show=False)
+        mark(self.screen,LEFT.position,Yellow)
        
         self._updateHeight(node)
         self._updateHeight(LEFT)
-
+        mark(self.screen,node.position,White,show=False)
+        mark(self.screen,LEFT.position,White,show=False)
         
         return LEFT #return so to parent node can link to the new subroot
 
     def _leftRotate(self,node):
         RIGHT = node.right
         RIGHT.left,node.right = node,RIGHT.left
+
+        mark(self.screen,node.position,Cyan,show=False)
+        mark(self.screen,RIGHT.position,Yellow)
+        
         self._updateHeight(node)
         self._updateHeight(RIGHT)
+
+        mark(self.screen,node.position,White,show=False)
+        mark(self.screen,RIGHT.position,White,show=False)
         return RIGHT
 
     def _inOrder(self,node):
