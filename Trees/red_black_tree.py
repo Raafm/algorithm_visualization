@@ -224,7 +224,7 @@ while True:
             time.sleep(3)
             pygame.draw.rect(screen,White,(0,0,screen_width-100,2000))
             pygame.display.update()
-        time.sleep(0.5)
+        time.sleep(0.3)
     
     if fast:
 
