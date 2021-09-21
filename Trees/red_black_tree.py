@@ -93,23 +93,27 @@ class Red_Black_Tree:
         m = (l+r)//2
         position = (m,y)
 
-        if node is None:    
-            inserting(self.screen,position,self.time+0.1)
+        if node is None:
+            inserting(self.screen,position,2*(self.time))
+            self.display_tree()    
             return Node(key, position, RED)
         
         visiting(self.screen,position,self.time)
         
         
         if         key  < node.key:
-            if node.left is None:
-                pygame.draw.line(self.screen,Black,(m,y),((m+l)//2,y+h),1)    
+            
+            pygame.draw.line(self.screen,Dark_yellow,(m,y),((m+l)//2,y+h),1)  
+            pygame.display.update()    
             node.left  = self._insert(node.left,  key, (l,m,y+h)) 
-            pygame.display.update()
+              
         elif   node.key <    key  :
-            if node.right is None:
-                pygame.draw.line(self.screen,Black,(m,y),((m+r)//2,y+h),1) 
-                pygame.display.update()   
+            
+            pygame.draw.line(self.screen,Dark_yellow,(m,y),((m+r)//2,y+h),1) 
+            pygame.display.update()      
             node.right = self._insert(node.right, key, (m,r,y+h)) 
+             
+
         else:              node.val   = position
 
         if self.isRed(node.right) and (not self.isRed(node.left))     : node = self.LeftRotate(node)
@@ -134,7 +138,7 @@ class Red_Black_Tree:
         screen.blit(text,text.get_rect(center = (1000,20)))
 
         pygame.display.update()
-        time.sleep(self.time)
+        time.sleep(self.time//2)
         
     def _display_tree(self,node,l,r,y):
         if node:
@@ -165,7 +169,7 @@ class Red_Black_Tree:
 
 
 treeSlow = Red_Black_Tree(screen,0.5)
-treeFast = Red_Black_Tree(screen,0)
+treeFast = Red_Black_Tree(screen,0.05)
 number = list(range(1,16))
 
 
@@ -193,7 +197,7 @@ while True:
         continue
 
     if slow:
-        number = []
+        number=[]
         if len(number):
             r=random.randint(0, len(number)-1)
             num = number[r]
