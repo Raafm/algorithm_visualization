@@ -86,6 +86,7 @@ class Red_Black_Tree:
         
         self.root = self._insert(self.root,key,position)
         self.root.color = Black
+        #self.display_tree()
 
     def _insert(self,node,key,position):
 
@@ -94,8 +95,7 @@ class Red_Black_Tree:
         position = (m,y)
 
         if node is None:
-            inserting(self.screen,position,2*(self.time))
-            self.display_tree()    
+            inserting(self.screen,position,2*(self.time))  
             return Node(key, position, RED)
         
         visiting(self.screen,position,self.time)
@@ -116,12 +116,18 @@ class Red_Black_Tree:
 
         else:              node.val   = position
 
-        if self.isRed(node.right) and (not self.isRed(node.left))     : node = self.LeftRotate(node)
-        self.display_tree()
-        if self.isRed(node.left)  and     self.isRed(node.left.left)  : node = self.RightRotate(node)
-        self.display_tree()
-        if self.isRed(node.left)  and     self.isRed(node.right)      :        self.FlipColors(node)
-        self.display_tree()
+        if (node.right is not None and node.right.key == key) or (node.left is not None and node.left.key == key) or self.time > 0.1:
+            self.display_tree()
+            time.sleep(self.time)
+        if self.isRed(node.right) and (not self.isRed(node.left))     :
+            node = self.LeftRotate(node)
+            self.display_tree()
+        if self.isRed(node.left)  and     self.isRed(node.left.left)  :
+            node = self.RightRotate(node)
+            self.display_tree()
+        if self.isRed(node.left)  and     self.isRed(node.right)      :      
+            self.FlipColors(node)
+            self.display_tree()
 
         return node
     
@@ -144,11 +150,7 @@ class Red_Black_Tree:
         if node:
             m = (l+r)//2
             mr,ml = (m+r)//2,(l+m)//2
-            #print node
-            if self.isRed(node):
-                mark(self.screen,(m,y),Red,show=False)
-            else:
-                mark(self.screen,(m,y),Black,show=False)
+        
             #print edges
             if node.right:
                 if   self.isRed(node.right):
@@ -164,12 +166,16 @@ class Red_Black_Tree:
                     pygame.draw.line(self.screen,Black,(m,y),(ml,y+h),1)
             
                 self._display_tree(node.left ,l, m, y+h)
-
+            #print node
+            if self.isRed(node):
+                mark(self.screen,(m,y),Red,show=False)
+            else:
+                mark(self.screen,(m,y),Black,show=False)
 
 
 
 treeSlow = Red_Black_Tree(screen,0.5)
-treeFast = Red_Black_Tree(screen,0.05)
+treeFast = Red_Black_Tree(screen,0.02)
 number = list(range(1,16))
 
 
@@ -197,7 +203,7 @@ while True:
         continue
 
     if slow:
-        number=[]
+        
         if len(number):
             r=random.randint(0, len(number)-1)
             num = number[r]
