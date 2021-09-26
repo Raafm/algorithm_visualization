@@ -1,6 +1,7 @@
 import pygame,time
 from threading import Thread, Lock, Condition
 from random import randint
+from algorithms.data_struct.queue import queue
 from algorithms.data_struct.stack import stack
 from algorithms.colors import *
 
@@ -11,7 +12,7 @@ mutex_ponto = Condition()
 mutex_display = Lock()
 N_operantes = 0
 
-S = stack()
+Q = queue()
 
 pygame.init()
 
@@ -21,8 +22,8 @@ screen_width = 1300
 screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
-square_width    =       4
-space = 3
+square_width    =       3
+space = 2
 index_color     =   (0,200,0)
 index2_color    =   (200,200,0)
 numb_color      =   (50,50,250)
@@ -30,12 +31,12 @@ const_color     =   (255,255,255)
 sum_color       =   (250,250,0)
 duplicate_color =   (255,0,0)
 ground = 500
-size_rate = 1.5
+size_rate = 2
 rect_color = []
 
 thread_color = [
     Teal,
-    Dark_red,
+    Flame,
     Castanho,
     (0,0,255),
     Magenta,
@@ -56,7 +57,7 @@ def display(screen,arr,pivot_pos = None):
     mutex_display.acquire()
     pygame.draw.rect(screen,Black,(0,0,screen_width-150,screen_height))
     font = pygame.font.Font('freesansbold.ttf',30)
-    text = font.render("Multi thread QuickSort. ",True,Green)                        
+    text = font.render("Multithread QuickSort. ",True,Green)                        
     screen.blit(text,text.get_rect(center = (400,30)))
     for i in range(len(arr)):
         pygame.draw.rect(   screen   ,  rect_color[i]    ,   (10 + (square_width+space)*i , ground - size_rate*arr[i],    square_width  ,  size_rate*arr[i])  )
@@ -84,7 +85,7 @@ def ordenar(*args):
     
 
         
-    while(S.not_empty() or N_operantes > 0):
+    while(Q.not_empty() or N_operantes > 0):
        
         # mutex para pegar um trecho 
         # para particionar (trabalhar/ bater ponto)
@@ -93,20 +94,22 @@ def ordenar(*args):
         # se nao tem particao pronta,
         # mas tem thread operando (produtora)
         # esperamos a thread liberar
-        while(N_operantes > 0 and not S.not_empty()):
-            pygame.draw.rect(screen, Light_grey, (1190,145+100*id ,80, 60))    # erase what was before in the prime 
+        while(N_operantes > 0 and not Q.not_empty()):
+            pygame.draw.rect(screen, Light_grey, (1170,145+100*id ,80, 60))    # erase what was before in the prime 
             font = pygame.font.Font('freesansbold.ttf',20)
             text = font.render(str("wait") ,True, thread_color[id])                      
-            screen.blit(text,text.get_rect(center = (1230,180+100*id)))
+            screen.blit(text,text.get_rect(center = (1210,180+100*id)))
+            mutex_display.acquire()
             pygame.display.update()
+            mutex_display.release()
             mutex_ponto.wait()
         
         #acabou o trabalho (arr ordenado)
-        if(not S.not_empty()):
+        if(not Q.not_empty()):
             mutex_ponto.release()
             break
         
-        top = S.pop() #particao para operar 
+        top = Q.pop() #particao para operar 
         N_operantes += 1 #um a mais trabalhando
         mutex_ponto.release()
 
@@ -117,12 +120,14 @@ def ordenar(*args):
         l = left
         r = right
         
-        pygame.draw.rect(screen, Light_grey, (1190,145+100*id ,80, 60))    # erase what was before in the prime 
+        pygame.draw.rect(screen, Light_grey, (1170,145+100*id ,80, 60))    # erase what was before in the prime 
         font = pygame.font.Font('freesansbold.ttf',20)
         text = font.render(str(left)+","+str(right) ,True, thread_color[id])                      
-        screen.blit(text,text.get_rect(center = (1230,180+100*id)))
+        screen.blit(text,text.get_rect(center = (1210,180+100*id)))
+        mutex_display.acquire()
         pygame.display.update()
-        
+        mutex_display.release()
+
         if(left < right) :
             
             pivot_index = left
@@ -131,29 +136,41 @@ def ordenar(*args):
             
             take_possession(id,left,right)
             display(screen,arr)
+            time.sleep(0.1)
             
             while l < r:
                 
                 
                 while l < len(arr) and arr[l] <= pivot:
+                    
+                    print_rect(screen,arr,l,Yellow)
+                    
+                    time.sleep(0.001)
                     l += 1
                     
                     
                 
                 while arr[r] > pivot:
+                    
+                    print_rect(screen,arr,r,Yellow)
+                    
+                    time.sleep(0.001)
                     r -= 1
                     
 
                 
                 if(l < r):
-                    print_rect(screen,arr,r,Yellow)
-                    print_rect(screen,arr,l,Yellow)
-                    time.sleep(0.05)
+                   
+                    print_rect(screen,arr,r,Red)
+                    print_rect(screen,arr,l,Red)
+                    
+                    time.sleep(0.005)
                     arr[l], arr[r] = arr[r], arr[l]
                 
                 
                 display(screen,arr)
-            
+                time.sleep(0.01)
+                
             # Swap pivot element with element on r pointer.
             # This puts pivot on its correct sorted place.
             arr[r], arr[pivot_index] = arr[pivot_index], arr[r]
@@ -165,15 +182,16 @@ def ordenar(*args):
             display(screen,arr,pivot_pos = r)
             take_possession(-1,r,r)
             print_rect(screen,arr,r,Lime)
+            time.sleep(0.2)
 
             trecho = (r+1,right)
             mutex_stack.acquire()
-            S.insert( trecho ) # regiao critica: colocar na stack a particao esquerda
+            Q.insert( trecho ) # regiao critica: colocar na stack a particao esquerda
             mutex_stack.release()
 
             trecho = (left, r-1)
             mutex_stack.acquire()
-            S.insert( trecho ) # regiao critica: colocar na stack a particao direita
+            Q.insert( trecho ) # regiao critica: colocar na stack a particao direita
             mutex_stack.release()
 
             mutex_ponto.acquire()
@@ -183,7 +201,7 @@ def ordenar(*args):
             mutex_ponto.acquire()
             mutex_ponto.notify_all()
             mutex_ponto.release()
-            time.sleep(0.1)
+            
         
         else: # se temos apenas um elemento na particao
             mutex_ponto.acquire()
@@ -195,11 +213,13 @@ def ordenar(*args):
             print_rect(screen,arr,left,Lime)
             time.sleep(0.1)
         
-    pygame.draw.rect(screen, Light_grey, (1190,145+100*id ,80, 60))    # erase what was before in the prime 
-    font = pygame.font.Font('freesansbold.ttf',15)
-    text = font.render(str("terminated") ,True, thread_color[id])                      
-    screen.blit(text,text.get_rect(center = (1230,180+100*id)))
+    pygame.draw.rect(screen, Light_grey, (1170,145+100*id ,80, 60))    # erase what was before in the prime 
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render(str("end") ,True, thread_color[id])                      
+    screen.blit(text,text.get_rect(center = (1210,180+100*id)))
+    mutex_display.acquire()
     pygame.display.update()
+    mutex_display.release()
     return None 
 
 
@@ -208,7 +228,7 @@ def ordenar(*args):
 
 if __name__ == "__main__":
     
-    N = 150
+    N = 200
     Nthreads = 4
     threads = []
     arr = list(randint(0,200) for _ in range(N))
@@ -219,7 +239,9 @@ if __name__ == "__main__":
         t = Thread(target=ordenar,args=(arr,N,id))
         threads.append(t)
 
-    S.insert((0,N-1)) 
+    Q.insert((0,N-1)) 
+    display(screen,arr)
+    time.sleep(1)
 
     for t in threads:
         t.start()
