@@ -34,10 +34,10 @@ size_rate = 1.5
 rect_color = []
 
 thread_color = [
+    Teal,
+    Dark_red,
     Castanho,
     (0,0,255),
-    Navy,
-    Dark_red,
     Magenta,
     White,
     Lime
