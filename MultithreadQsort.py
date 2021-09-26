@@ -21,8 +21,8 @@ screen_width = 1300
 screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
-square_width    =       2
-space = 2
+square_width    =       4
+space = 3
 index_color     =   (0,200,0)
 index2_color    =   (200,200,0)
 numb_color      =   (50,50,250)
@@ -44,13 +44,20 @@ thread_color = [
 ]
 
 def print_rect(screen,arr,i,color):
+
     if i >= len(arr): return
     pygame.draw.rect(   screen   ,  color   ,   (10 + (square_width+space)*i , ground - size_rate*arr[i],    square_width  ,  size_rate*arr[i])  )
+    mutex_display.acquire()
     pygame.display.update()
+    mutex_display.release()
 
 def display(screen,arr,pivot_pos = None):
+
     mutex_display.acquire()
     pygame.draw.rect(screen,Black,(0,0,screen_width-150,screen_height))
+    font = pygame.font.Font('freesansbold.ttf',30)
+    text = font.render("Multi thread QuickSort. ",True,Green)                        
+    screen.blit(text,text.get_rect(center = (400,30)))
     for i in range(len(arr)):
         pygame.draw.rect(   screen   ,  rect_color[i]    ,   (10 + (square_width+space)*i , ground - size_rate*arr[i],    square_width  ,  size_rate*arr[i])  )
     
@@ -60,7 +67,7 @@ def display(screen,arr,pivot_pos = None):
 
     pygame.display.update()
     mutex_display.release()
-    time.sleep(0.05)
+   
 
 def take_possession(id,left,right):
     for i in range(left,right+1):
@@ -121,9 +128,9 @@ def ordenar(*args):
             pivot_index = left
             pivot = arr[pivot_index]
             print("thread" , id," starting: ",arr[left:right+1],"pivot = ",pivot)
-            display(screen,arr)
+            
             take_possession(id,left,right)
-         
+            display(screen,arr)
             
             while l < r:
                 
@@ -201,7 +208,7 @@ def ordenar(*args):
 
 if __name__ == "__main__":
     
-    N = 250
+    N = 150
     Nthreads = 4
     threads = []
     arr = list(randint(0,200) for _ in range(N))
@@ -216,21 +223,25 @@ if __name__ == "__main__":
 
     for t in threads:
         t.start()
+
+    running =  True
+
+        
+        
+
     for t in threads:
         t.join()
 
 
     print(arr)
-    
-    pause = True
-    running =  True
     while running :
 
         # pygame stuff:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()                   #exit pygame,
-                running = False                          #exit() program
+                running = False                          #exit() program    
+
 
 
 
