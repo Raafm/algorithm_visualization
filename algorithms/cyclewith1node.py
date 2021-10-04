@@ -16,47 +16,7 @@ def arrow(screen, start, end, lcolor = (255,255, 255), tricolor = (255,255,255),
     pygame.display.update()
 
 
-def memorize(screen,node_center,radius=10,Time = 0.1,show=True,sender_on = False):
-    Springgreen	    =       (0,255,127)
-    Flame           =       (226, 88, 34)
-    pygame.draw.circle(screen,Springgreen,node_center,radius)
-    
-    if sender_on:
-        font = pygame.font.Font('freesansbold.ttf',15)
-        text = font.render("s",True,Flame)                        
-        screen.blit(text,text.get_rect(center = node_center))
-    else:
-        font = pygame.font.Font('freesansbold.ttf',15)
-        text = font.render("r",True,Flame)                        
-        screen.blit(text,text.get_rect(center = node_center))
-    if show:
-        pygame.display.update()
-        time.sleep(Time)
-
-
-def visit(screen,node_center,visit_color = (0,255,0),radius = 10,show=True,Time = 0.1):
-
-    pygame.draw.circle(screen,visit_color,node_center,radius)
-
-    if show:
-        pygame.display.update()
-        time.sleep(Time)
-
-
-
-def visited(screen,node_center,radius = 10,show=True,Time = 0.1):
-    Cyan = (0,255,255)
-    pygame.draw.circle(screen, Cyan , node_center , radius)
-
-    
-
-    if show:
-        pygame.display.update()
-        time.sleep(Time)
-
-
-
-def mark(screen,node_center,color,radius=8,show=True,Time = 0.1,text = None,text_color = (226, 88, 34)):
+def mark(screen,node_center,color,radius=8,show=True,Time = 0.1,text = None,text_color = (0, 0, 0)):
 
     pygame.draw.circle(screen, color, node_center , radius)
     
@@ -97,6 +57,28 @@ def display_graph(screen,graph,node_position,s):
     Flame       = (226, 88, 34)
     Yellow	        =	    (255,255,0)
     Cyan 	        =	    (0,255,255)
+
+    
+    font = pygame.font.Font('freesansbold.ttf',30)
+    text = font.render("Find a cycle with the node s: ",True,White)                        
+    screen.blit(text,text.get_rect(center = (930,70)))
+    mark(screen,(1160,70),White,15,text = "s",text_color = (0,0,0))
+
+    font = pygame.font.Font('freesansbold.ttf',20)
+    pygame.draw.circle(screen,(255,0,0), (850,200),10)
+    text = font.render("memory stack",True,(255,0,0))
+    screen.blit(text,text.get_rect(center = (970,200)))                             # informative node   
+    text = font.render("(pilha de processamento)",True,(255,0,0))
+    screen.blit(text,text.get_rect(center = (970,220)))
+
+
+    pygame.draw.circle(screen,Dark_yellow, (870,340),10)
+    text = font.render("seen (visto)",True,Dark_yellow)
+    screen.blit(text,text.get_rect(center = (1000,340)))
+
+    pygame.draw.circle(screen,Flame, (870,440),10)
+    text = font.render("neighbour of source",True,Flame)
+    screen.blit(text,text.get_rect(center = (1000,440)))
     #print edges
     for node in range(N):
         for neighbour in graph[node]:
@@ -111,18 +93,24 @@ def display_graph(screen,graph,node_position,s):
         else:
             mark(screen,node_position[node],Blue,8,False)
 
-    mark(screen,node_position[s],White,10,False)
+    mark(screen,node_position[s],White,10,False,text = "s")
 
     pygame.display.update()
 
 
 def show_cycle(screen,parent,node_position,node,source):
     White =	    (255,255,255)
+    arrow(screen,node_position[source],node_position[node],White,(0,0,0))
     cur = node
     while cur != source:
         mark(screen,node_position[cur],White)
+        arrow(screen,node_position[cur],node_position[parent[cur]],White,(0,0,0))
+        node = parent[cur]
         cur = parent[cur]
-    
+        time.sleep(0.3)
+
+    arrow(screen,node_position[node],node_position[source],White,(0,0,0))
+    mark(screen,node_position[source],White,10,text = "s")
 
 def cycleWith1Node(graph,node_position,source = 0):
     from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,Red,Black,Springgreen,Green,Lime,Cream,Dark_yellow,Yellow,skyblue
@@ -156,7 +144,7 @@ def cycleWith1Node(graph,node_position,source = 0):
         mark(screen,node_position[node],Flame)
         S.insert(node)
     
-    pause = False
+    pause = True
     running =  True
     while running:
         for event in pygame.event.get():
@@ -165,10 +153,10 @@ def cycleWith1Node(graph,node_position,source = 0):
 
 
         
-        if event.type == pygame.KEYDOWN:        
-            if event.key == pygame.K_SPACE:     #press breakspace to pause or play
-                pause = not pause   
-                time.sleep(0.2)
+            if event.type == pygame.KEYDOWN:        
+                if event.key == pygame.K_SPACE:     #press breakspace to pause or play
+                    pause = not pause   
+                    time.sleep(0.2)
     
         if pause:
             continue
@@ -176,7 +164,7 @@ def cycleWith1Node(graph,node_position,source = 0):
         if S.not_empty():
             cur = S.pop()
             if status[cur] == IN_STACK:
-                mark(screen,node_position[cur],Green)
+                mark(screen,node_position[cur],Green,Time = 0.3)
 
             for neighbour in graph[cur]:
                 if status[neighbour] == NOT_SEEN:
@@ -187,6 +175,7 @@ def cycleWith1Node(graph,node_position,source = 0):
                 elif status[neighbour] == NEIGHBOUR and parent[cur] != neighbour:
                     parent[neighbour] = cur
                     show_cycle(screen,parent,node_position,neighbour,source)
+                    S = stack() #empty stack
                     pause = True
                     break
 
