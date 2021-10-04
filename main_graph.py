@@ -1,4 +1,4 @@
-algorithm = 7
+algorithm = 9
 
 
 #bfs
@@ -6,7 +6,7 @@ if algorithm == 1:
 
     from algorithms.bfs import bfs
     from graph.normal import graph,node_list
-    source = 0
+    source = 71
 
     bfs(graph,node_list,source)
 
@@ -63,3 +63,19 @@ if algorithm == 7:
     t = 50
 
     cycleWith2Nodes(graph, node_list,s,t)
+
+if algorithm == 8:
+    from algorithms.cyclewith1node import cycleWith1Node
+    from graph.normal import graph,node_list
+
+    source = 1
+
+    cycleWith1Node(graph, node_list,source)
+
+if algorithm == 9:
+    from algorithms.cyclewith1nodeshortest import cycleWith1NodeShortest
+    from graph.normal import graph,node_list
+
+    source = 0
+
+    cycleWith1NodeShortest(graph, node_list,source)
