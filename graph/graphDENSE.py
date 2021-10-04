@@ -1999,39 +1999,38 @@ if __name__ == '__main__':
         graph[node_list.index(node2)].append(node_list.index(node1))
         
         
-    with open("temp.txt","w") as tempFile:
-        for adj in graph:
-            print(adj)
-            tempFile.write(str(adj)+ ",\n")
+#    with open("temp.txt","w") as tempFile:
+#        for adj in graph:
+#            print(adj)
+#            tempFile.write(str(adj)+ ",\n")
        
-#    pygame.init()
-#
-#    forget = (1,0,0)
-#
-#    screen_height = 700
-#    screnn_width = 1000
-#    screen = pygame.display.set_mode((screnn_width,screen_height))
-#
-#    screen.fill((0,0,0))
-#
-#
-#    #print graph:
-#    for node1,node2 in edge_dict:                                                   # draw edges
-#        pygame.draw.line(screen,(255,255,255), node1, node2, 2)
-#
-#    for node in node_list:                                                          # draw nodes
-#        pygame.draw.circle(screen,  (0,0,255), node, 5)
-#
-#    pygame.display.update()
-#
-#        
-#
-#    
-#    while True :
-#
-#        # pygame stuff:
-#        for event in pygame.event.get():
-#            if event.type == pygame.QUIT:
-#                pygame.quit()                   #exit pygame,
-#                quit()                          #exit() program
-#
+    pygame.init()
+
+    forget = (1,0,0)
+
+    screen_height = 700
+    screnn_width = 1200
+    screen = pygame.display.set_mode((screnn_width,screen_height))
+
+    screen.fill((0,0,0))
+
+
+    #print graph:
+    for node1,node2 in edge_dict:                                                   # draw edges
+        pygame.draw.line(screen,(255,255,255), node1, node2, 2)
+
+    for node in node_list:                                                          # draw nodes
+        pygame.draw.circle(screen,  (0,0,255), node, 5)
+
+    pygame.display.update()
+
+        
+
+    
+    while True :
+
+        # pygame stuff:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()                   #exit pygame,
+                quit()                          #exit() program

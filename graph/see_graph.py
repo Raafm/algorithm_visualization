@@ -1,5 +1,5 @@
 import pygame
-from grafo import nodes, lista_arestas
+from normal import node_list as nodes, lista_arestas
 
 pygame.init()
 
