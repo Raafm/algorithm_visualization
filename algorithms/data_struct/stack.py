@@ -24,3 +24,6 @@ class stack:
 
     def not_empty(self):
         return bool(self.length)
+    
+    def top(self):
+        return self.head.val
