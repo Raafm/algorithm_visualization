@@ -1,12 +1,12 @@
-algorithm = 9
+algorithm = 2
 
 
 #bfs
 if algorithm == 1:
 
     from algorithms.bfs import bfs
-    from graph.normal import graph,node_list
-    source = 71
+    from graph.bigGraph import graph,node_list
+    source = 0
 
     bfs(graph,node_list,source)
 
