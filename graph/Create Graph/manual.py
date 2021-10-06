@@ -3,7 +3,7 @@
 
 import pygame,time
 pygame.init()                   #width , height : coordinates 0,0 no canto superior esquerdo
-screen = pygame.display.set_mode((800,600))
+screen = pygame.display.set_mode((1000,650))
 screen.fill((0,0,0))     
 
 
