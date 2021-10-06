@@ -1,14 +1,15 @@
-def dfs(graph, node_position, source = 0, steps_mode = False):
-
-    import pygame,time
+def dfs(graph, node_position, source = 0,steps_mode = False):
+    
     from algorithms.data_struct.stack import stack
-
-    process_stack = stack()
+    import pygame,time
+    from algorithms.colors import Springgreen,Cyan,Red,Green,Yellow,Lime,Black,White,Flame,Navy
+    process_list = stack()
     seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
+    parent = list(-1 for _ in range(len(graph))) 
 
     screen_height = 700
-    screnn_width = 1000
-    screen = pygame.display.set_mode((screnn_width,screen_height))
+    screen_width = 1300
+    screen = pygame.display.set_mode((screen_width,screen_height))
 
     screen.fill((0,0,0))
 
@@ -26,7 +27,6 @@ def dfs(graph, node_position, source = 0, steps_mode = False):
     Green  	     =	    (0,180,0)
     Springgreen	 =      (0,255,127)
 
-
     source_color = Green
     node_color = Blue
     current_color = Lime
@@ -34,19 +34,24 @@ def dfs(graph, node_position, source = 0, steps_mode = False):
     node_radius = 5
 
 
-    font = pygame.font.Font('freesansbold.ttf',30)
-    text = font.render("DFS",True,(0,255,0))                   # informative node       
-    screen.blit(text,text.get_rect(center = (950,50)))
+    font = pygame.font.Font('freesansbold.ttf',35)
+    text = font.render("DFS",True,Dark_yellow)                   # informative node       
+    screen.blit(text,text.get_rect(center = (1050,50)))
+    
+    font = pygame.font.Font('freesansbold.ttf',25)
+    
+    pygame.draw.circle(screen,Red, (1000,185),10)
+    text = font.render("memory stack",True,Red)
+    screen.blit(text,text.get_rect(center = (1110,183)))                             # informative node   
+    text = font.render("(pilha de processamento)",True,Red)
+    screen.blit(text,text.get_rect(center = (1080,220)))
 
-    font = pygame.font.Font('freesansbold.ttf',15)
-    pygame.draw.circle(screen,(255,0,0), (850,200),10)
-    text = font.render("memory stack",True,(255,0,0))
-    screen.blit(text,text.get_rect(center = (915,200)))                             # informative node   
-    text = font.render("(pilha de processamento)",True,(255,0,0))
-    screen.blit(text,text.get_rect(center = (910,220)))
-
-
-
+    pygame.draw.circle(screen,  Yellow,(1000,250)  ,10 )
+    pygame.draw.circle(screen,  Dark_yellow, (1000,250)  ,7 )
+    text = font.render("seen",True,Dark_yellow,20)
+    screen.blit(text,text.get_rect(center = (1060,250)))
+    pygame.display.update()
+    
 
     for node in range(len(graph)):
         for neighbour in graph[node]:
@@ -66,10 +71,11 @@ def dfs(graph, node_position, source = 0, steps_mode = False):
     pygame.display.update()
 
 
-    pause = True            # doesn't start until press play (breakspace)
+    
+    pause = True
     current = source
-    process_stack.insert(source)
-
+    process_list.insert(source)
+    
     while True :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -78,9 +84,9 @@ def dfs(graph, node_position, source = 0, steps_mode = False):
 
 
             
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    pause = not pause
+            if event.type == pygame.KEYDOWN:        
+                if event.key == pygame.K_SPACE:     #press breakspace to pause or play
+                    pause = not pause   
                     time.sleep(0.2)
         
         if pause:
@@ -89,24 +95,38 @@ def dfs(graph, node_position, source = 0, steps_mode = False):
         if steps_mode: #pause every step of the algorithm
             pause = True  #when this iteration ends,the animation is paused
 
-        if process_stack.not_empty(): 
-
+        if process_list.not_empty(): 
             
-            pygame.draw.circle(screen,  (255,255,255), node_position[current] , 10)
-            pygame.draw.circle(screen,  (0,255,0), node_position[current] , 5)
-
-            current = process_stack.pop()
+            current = process_list.pop()
             seen[current] = True
-
-            pygame.draw.circle(screen,  current_color, node_position[current] , 10)
+            
+            pygame.draw.circle(screen, Lime , node_position[current] , 6)
+            pygame.display.update()
+            time.sleep(0.5)
 
             for neighbour in graph[current]:
                 if seen[neighbour]:
+                    time.sleep(0.02)
                     continue
                 else:
-                    pygame.draw.circle(screen,  (255,0,0), node_position[neighbour] , 10)
-                    process_stack.insert(neighbour)
+                 
+                    pygame.draw.circle(screen,  Red, node_position[neighbour] , 5)
+                    pygame.display.update()
+                    time.sleep(0.3)
+                    parent[neighbour] = current 
+                    process_list.insert(neighbour)
+                    seen[neighbour] = True
 
 
-        pygame.display.update()
-        time.sleep(0.1)
+
+            if process_list.not_empty():
+                next_node = process_list.top()
+                pred = parent[next_node] #predecessor
+                pygame.draw.line(screen,Yellow,node_position[pred],node_position[next_node],3)
+                pygame.draw.circle(screen,  Yellow, node_position[pred] ,8 )
+                pygame.draw.circle(screen,  Dark_yellow, node_position[pred] ,6 )
+
+            pygame.draw.circle(screen,  Yellow, node_position[current] ,8 )
+            pygame.draw.circle(screen,  Dark_yellow, node_position[current] ,6 )
+            pygame.display.update()
+            

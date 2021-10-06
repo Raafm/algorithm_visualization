@@ -2,12 +2,13 @@ def bfs(graph, node_position, source = 0,steps_mode = False):
     
     from algorithms.data_struct.queue import queue
     import pygame,time
+    from algorithms.colors import Springgreen,Cyan,Red,Green,Yellow,Lime,Black,White,deepskyblue
     process_list = queue()
     seen = list(False for x in range(len(graph)))                                   # haven't seen anyone yet
 
     screen_height = 700
-    screnn_width = 1000
-    screen = pygame.display.set_mode((screnn_width,screen_height))
+    screen_width = 1300
+    screen = pygame.display.set_mode((screen_width,screen_height))
 
     screen.fill((0,0,0))
 
@@ -34,19 +35,22 @@ def bfs(graph, node_position, source = 0,steps_mode = False):
 
     font = pygame.font.Font('freesansbold.ttf',30)
     text = font.render("BFS",True,(0,255,0))                   # informative node       
-    screen.blit(text,text.get_rect(center = (950,50)))
-    font = pygame.font.Font('freesansbold.ttf',15)
+    screen.blit(text,text.get_rect(center = (1150,50)))
     
-    pygame.draw.circle(screen,(255,0,0), (850,200),10)
-    text = font.render("memory queue",True,(255,0,0))
-    screen.blit(text,text.get_rect(center = (915,200)))                             # informative node   
-    text = font.render("(fila de processamento)",True,(255,0,0))
-    screen.blit(text,text.get_rect(center = (910,220)))
+    font = pygame.font.Font('freesansbold.ttf',25)
+    
+    pygame.draw.circle(screen,(0,255,255), (1000,185),10)
+    text = font.render("memory queue",True,(0,255,255))
+    screen.blit(text,text.get_rect(center = (1110,183)))                             # informative node   
+    text = font.render("(fila de processamento)",True,(0,255,255))
+    screen.blit(text,text.get_rect(center = (1100,220)))
 
-    pygame.draw.circle(screen,  (255,255,255), (850,250) , 10)
-    pygame.draw.circle(screen,  (0,255,0), (850,250) , 5)
-    text = font.render("seen",True,(0,255,0),20)
-    screen.blit(text,text.get_rect(center = (910,250)))
+    pygame.draw.circle(screen,  Lime,(1000,250)  ,10 )
+    pygame.draw.circle(screen,  Springgreen, (1000,250)  ,7 )
+    text = font.render("seen",True,Springgreen,20)
+    screen.blit(text,text.get_rect(center = (1060,250)))
+    pygame.display.update()
+    
 
     for node in range(len(graph)):
         for neighbour in graph[node]:
@@ -103,21 +107,21 @@ def bfs(graph, node_position, source = 0,steps_mode = False):
                 
             
 
-            pygame.draw.circle(screen,  (255,255,255), node_position[current] , 10)
-            pygame.draw.circle(screen,  (0,255,0), node_position[current] , 5)
+            pygame.draw.circle(screen,  Lime, node_position[current] ,8 )
+            pygame.draw.circle(screen,  Springgreen, node_position[current] ,6 )
 
             missing -= 1
             current = process_list.pop()
             seen[current] = True
-            pygame.draw.circle(screen,  (255,255,255), node_position[current] , 10)
-            pygame.draw.circle(screen,  (0,255,0), node_position[current] , 5)
+            
+            #pygame.draw.circle(screen, Lime , node_position[current] , 6)
 
             for neighbour in graph[current]:
                 if seen[neighbour]:
                     continue
                 else:
                     n_layer += 1
-                    pygame.draw.circle(screen,  (255,0,0), node_position[neighbour] , 10)
+                    pygame.draw.circle(screen,  Cyan, node_position[neighbour] , 8)
                     process_list.insert(neighbour)
 
 
