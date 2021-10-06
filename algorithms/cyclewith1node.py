@@ -63,6 +63,7 @@ def display_graph(screen,graph,node_position,s):
     text = font.render("Find a cycle with the node s: ",True,White)                        
     screen.blit(text,text.get_rect(center = (930,70)))
     mark(screen,(1160,70),White,15,text = "s",text_color = (0,0,0))
+    time.sleep(1.5)
 
     font = pygame.font.Font('freesansbold.ttf',20)
     pygame.draw.circle(screen,(255,0,0), (850,200),10)
@@ -72,13 +73,7 @@ def display_graph(screen,graph,node_position,s):
     screen.blit(text,text.get_rect(center = (970,220)))
 
 
-    pygame.draw.circle(screen,Dark_yellow, (870,340),10)
-    text = font.render("seen (visto)",True,Dark_yellow)
-    screen.blit(text,text.get_rect(center = (1000,340)))
-
-    pygame.draw.circle(screen,Flame, (870,440),10)
-    text = font.render("neighbour of source",True,Flame)
-    screen.blit(text,text.get_rect(center = (1000,440)))
+    
     #print edges
     for node in range(N):
         for neighbour in graph[node]:
@@ -96,6 +91,7 @@ def display_graph(screen,graph,node_position,s):
     mark(screen,node_position[s],White,10,False,text = "s")
 
     pygame.display.update()
+    time.sleep(1)
 
 
 def show_cycle(screen,parent,node_position,node,source):
@@ -126,22 +122,22 @@ def cycleWith1Node(graph,node_position,source = 0):
 
     N = len(graph) #number of nodes in the graph
     display_graph(screen,graph,node_position,source)
+    
 
-    NOT_SEEN = 0
-    IN_STACK = 1
-    SEEN    = 2
-    NEIGHBOUR = 3
-    status = list( NOT_SEEN for _ in range(N) )
-    status[source] = SEEN
+    color = list( Blue for _ in range(N) )
+    color[source] = White
     
     parent = list( -1 for _ in range(N) )
 
     S = stack()
     
+    color_list = [Dark_red,skyblue,Flame,Dark_yellow,Yellow,]
+    i = 0
     for node in graph[source]:
-        status[node] = NEIGHBOUR 
+        color[node] = color_list[i]
+        i+=1
         parent[node] = source 
-        mark(screen,node_position[node],Flame)
+        mark(screen,node_position[node],color[node])
         S.insert(node)
     
     pause = True
@@ -163,26 +159,26 @@ def cycleWith1Node(graph,node_position,source = 0):
        
         if S.not_empty():
             cur = S.pop()
-            if status[cur] == IN_STACK:
-                mark(screen,node_position[cur],Green,Time = 0.3)
+            
+            mark(screen,node_position[cur],color[node],Time = 0.3)
 
             for neighbour in graph[cur]:
-                if status[neighbour] == NOT_SEEN:
-                    status[neighbour] = IN_STACK
+                if color[neighbour] == Blue:
+                    color[neighbour] = color[cur]
                     parent[neighbour] = cur
                     S.insert(neighbour)
                     mark(screen,node_position[neighbour],Red)
-                elif status[neighbour] == NEIGHBOUR and parent[cur] != neighbour:
+                elif color[neighbour] != color[cur] and parent[cur] != neighbour:
                     parent[neighbour] = cur
+                    font = pygame.font.Font('freesansbold.ttf',30)
+                    text = font.render("Found!",True,White)                        
+                    screen.blit(text,text.get_rect(center = (930,400)))
+                    pygame.display.update()
+                    time.sleep(1)
+
                     show_cycle(screen,parent,node_position,neighbour,source)
                     S = stack() #empty stack
                     pause = True
                     break
-
-            if pause:continue
-            
-            if status[cur] == IN_STACK:
-                status[cur] = SEEN
-                mark(screen,node_position[cur],Dark_yellow)
-
+                        
             
