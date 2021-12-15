@@ -37,10 +37,11 @@ class UnionFind:
 
         if Patriarch1 == Patriarch2: return None
 
-        if self.children[Patriarch1].size < self.children[Patriarch2].size:  #this class is made for N_islands Union Find where I need to upgrade everyone
-            Patriarch1,Patriarch2 =Patriarch2,Patriarch1
-
-
+        if self.rank[Patriarch1] < self.rank[Patriarch2]:
+            Patriarch1,Patriarch2 = Patriarch2,Patriarch1
+        elif self.rank[Patriarch1] == self.rank[Patriarch2]:
+            self.rank[Patriarch1] += 1
+       
         self.parent[Patriarch2] = Patriarch1
 
         self.children[Patriarch1].concat(self.children[Patriarch2])
@@ -95,7 +96,7 @@ class Matrix_ChildUnionFind:
 
     def child_list(self, position):
         x,y = self.Find(position)
-        return self.children[x][y] # retorns the linked list  
+        return self.children[x][y] # returns the linked list  
 
 
 

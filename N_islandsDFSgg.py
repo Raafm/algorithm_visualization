@@ -1,7 +1,16 @@
 
 from  graph.matriz import color,WHITE, blue,ciano
 #from fios_de_agua import M,node_color
-from graph.Continental import M, node_color
+from graph.goodIslands import goodIslands as node_color
+
+M = list(
+        list( (50 + 5*x , 50 + 5*y )  for x in range(len(node_color)) )   for y in range(len(node_color[0]))
+    )
+N = len(M)
+print(len(M),len(M[0]))
+for k in range(N):
+    M[0][k] = M[k][0] = M[k][N-1] = M[N-1][k] = (0,0,0)
+    M[1][k] = M[k][1] = M[k][N-2] = M[N-2][k] = (0,0,0)
 
 import pygame
 import time,random

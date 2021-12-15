@@ -57,14 +57,16 @@ def display_graph(screen,graph,node_position,s):
     Flame       = (226, 88, 34)
     Yellow	        =	    (255,255,0)
     Cyan 	        =	    (0,255,255)
+    Black = (0,0,0)
+    Dark_red        =     	(150,0,0)
 
     
     font = pygame.font.Font('freesansbold.ttf',30)
-    text = font.render("Find the shortest cycle",True,White)                        
+    text = font.render("Find the shortest cycle",True,Black)                        
     screen.blit(text,text.get_rect(center = (930,70)))
-    text = font.render("with the node s: ",True,White)                        
+    text = font.render("with the node s: ",True,Black)                        
     screen.blit(text,text.get_rect(center = (930,100)))
-    mark(screen,(1100,100),White,15,text = "s",text_color = (0,0,0), text_size = 22)
+    mark(screen,(1100,100),(255,0,0),15,text = "s",text_color = (0,0,0), text_size = 22)
     pygame.display.update()
     time.sleep(1.5)
 
@@ -76,13 +78,13 @@ def display_graph(screen,graph,node_position,s):
     screen.blit(text,text.get_rect(center = (970,220)))
     pygame.display.update()
     
-    
+    time.sleep(2)
 
     #print edges
     for node in range(N):
         for neighbour in graph[node]:
-            pygame.draw.line(screen,White,node_position[node],node_position[neighbour],1)
-                   
+            pygame.draw.line(screen,Black,node_position[node],node_position[neighbour],2)
+           
            
 
     #print nodes
@@ -91,63 +93,62 @@ def display_graph(screen,graph,node_position,s):
             mark(screen,node_position[node],Blue,8,False)
         else:
             mark(screen,node_position[node],Blue,8,False)
+       
 
-    mark(screen,node_position[s],White,10,False,text = "s")
+    mark(screen,node_position[s],(255,0,0),10,False,text = "s")
 
     pygame.display.update()
-    time.sleep(1.5)
+    time.sleep(2)
 
 
-def show_cycle(screen,parent,node_position,node2,node1,source):
-
-    White =	    (255,255,255)
+def show_cycle(screen,parent,node_position,node2,node1,source,cycle_color = (255,255,255)):
 
     cur1 = node1
     cur2 = node2
 
     while cur1 != source and cur2 != source:
 
-        mark(screen,node_position[cur1],White)
-        mark(screen,node_position[cur2],White)
-        arrow(screen,node_position[cur1],node_position[parent[cur1]],White,(0,0,0))
-        arrow(screen,node_position[cur2],node_position[parent[cur2]],White,(0,0,0))
+        mark(screen,node_position[cur1],cycle_color)
+        mark(screen,node_position[cur2],cycle_color)
+        arrow(screen,node_position[cur1],node_position[parent[cur1]],cycle_color,(0,0,0))
+        arrow(screen,node_position[cur2],node_position[parent[cur2]],cycle_color,(0,0,0))
         node1 = parent[cur1]
         cur1 = parent[cur1]
         node2 = parent[cur2]
         cur2 = parent[cur2]
         time.sleep(0.3)
 
-    arrow(screen,node_position[node1],node_position[source],White,(0,0,0))
-    mark(screen,node_position[source],White,10,text = "s")
+    arrow(screen,node_position[node1],node_position[source],cycle_color,(0,0,0))
+    mark(screen,node_position[source],cycle_color,10,text = "s")
 
     while cur1 != source:
 
-        mark(screen,node_position[cur1],White)
-        arrow(screen,node_position[cur1],node_position[parent[cur1]],White,(0,0,0))
+        mark(screen,node_position[cur1],cycle_color)
+        arrow(screen,node_position[cur1],node_position[parent[cur1]],cycle_color,(0,0,0))
         node1 = parent[cur1]
         cur1 = parent[cur1]
         time.sleep(0.3)
 
     while cur1 != source:
 
-        mark(screen,node_position[cur2],White)
-        arrow(screen,node_position[cur2],node_position[parent[cur2]],White,(0,0,0))
+        mark(screen,node_position[cur2],cycle_color)
+        arrow(screen,node_position[cur2],node_position[parent[cur2]],cycle_color,(0,0,0))
         node1 = parent[cur2]
         cur1 = parent[cur2]
         time.sleep(0.3)
 
     if node2 != source:
-        arrow(screen,node_position[node2],node_position[source],White,(0,0,0))
-        mark(screen,node_position[source],White,10,text = "s")
-        mark(screen,node_position[node2],White,10)
+        arrow(screen,node_position[node2],node_position[source],cycle_color,(0,0,0))
+        mark(screen,node_position[source],cycle_color,10,text = "s")
+        mark(screen,node_position[node2], cycle_color,10)
 
     if node1 != source:
-        arrow(screen,node_position[node1],node_position[source],White,(0,0,0))
-        mark(screen,node_position[source],White,10,text = "s")
-        mark(screen,node_position[node1],White,10)
+        arrow(screen,node_position[node1],node_position[source],cycle_color,(0,0,0))
+        mark(screen,node_position[source],cycle_color,10,text = "s")
+        mark(screen,node_position[node1], cycle_color,10)
 
 
-def cycleWith1NodeShortest(graph,node_position,source = 0):
+def cycleWith1NodeShortest(graph,node_position,source = 0,Time = 0.15,cycle_color = (255,255,255)):
     from algorithms.colors import Dark_red,Flame,Cyan,White,Blue,Red,Black,Springgreen,Green,Lime,Cream,Dark_yellow,Yellow,lightsteelblue,Teal
     from algorithms.data_struct.queue import queue
 
@@ -157,7 +158,7 @@ def cycleWith1NodeShortest(graph,node_position,source = 0):
     screen_width = 1300
     screen = pygame.display.set_mode((screen_width,screen_height))
 
-    screen.fill((0,0,0))    
+    screen.fill((200,200,200))    
 
     N = len(graph) #number of nodes in the graph
     display_graph(screen,graph,node_position,source)
@@ -170,7 +171,7 @@ def cycleWith1NodeShortest(graph,node_position,source = 0):
 
     Q = queue()
 
-    color_list = [Springgreen,Teal,Red,Dark_yellow]
+    color_list = [Springgreen,Dark_yellow,Teal,Red]
     i = 0
 
     for node in graph[source]:
@@ -201,7 +202,7 @@ def cycleWith1NodeShortest(graph,node_position,source = 0):
         if Q.not_empty():
             cur = Q.pop()
             
-            mark(screen,node_position[cur],color[cur],Time = 0.15)
+            mark(screen,node_position[cur],color[cur],Time = Time)
 
             for neighbour in graph[cur]:
 
@@ -210,18 +211,18 @@ def cycleWith1NodeShortest(graph,node_position,source = 0):
                     color[neighbour] = color[cur]
                     parent[neighbour] = cur
                     Q.insert(neighbour)
-                    mark(screen,node_position[neighbour],Cyan)
+                    mark(screen,node_position[neighbour],Cyan,Time = Time)
 
                 elif neighbour != source and color[neighbour] != color[cur]:
                     
                     font = pygame.font.Font('freesansbold.ttf',30)
-                    text = font.render("Found!",True,White)                        
+                    text = font.render("Found!",True,cycle_color)                        
                     screen.blit(text,text.get_rect(center = (930,400)))
-                    mark(screen,node_position[neighbour],White)
+                    mark(screen,node_position[neighbour],cycle_color)
 
                     time.sleep(2)
-                    arrow(screen,node_position[cur],node_position[neighbour],White,Black)
-                    show_cycle(screen,parent,node_position,neighbour,cur,source)
+                    arrow(screen,node_position[neighbour],node_position[cur],cycle_color,Black)
+                    show_cycle(screen,parent,node_position,neighbour,cur,source,cycle_color = cycle_color)
                     Q = queue() #empty queue
                     pause = True
                     break

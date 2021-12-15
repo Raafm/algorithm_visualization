@@ -1,4 +1,3 @@
-"""Program that implements a max heap data structure"""
 
 # código autoral de Eduardo Geber
 

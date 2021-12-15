@@ -133,10 +133,10 @@ while running :
 
     if see_neighbours and not found:
         i,j = current
-        if(       (i+1 < ROWS)             and   (maze[i+1][ j ] == Black or maze[i+1][ j ] == Green) ): insert_stack(i+1 ,  j ) ; S.insert((i+1 ,  j )) ; predecessor[i+1][ j ] = ( i , j )
-        if(        (0  <  i )              and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_stack(i-1 ,  j ) ; S.insert((i-1 ,  j )) ; predecessor[i-1][ j ] = ( i , j )
-        if(       (j+1 < COLS)             and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_stack( i  , j+1) ; S.insert(( i  , j+1)) ; predecessor[ i ][j+1] = ( i , j )
-        if(        (j  > 0 )               and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_stack( i  , j-1) ; S.insert(( i  , j-1)) ; predecessor[ i ][j-1] = ( i , j )
+        if(   (i+1 < ROWS)     and   (maze[i+1][ j ] == Black or maze[i+1][ j ] == Green) ): insert_stack(i+1 ,  j ) ; S.insert((i+1 ,  j )) ; predecessor[i+1][ j ] = ( i , j )
+        if(    (0  <  i )      and   (maze[i-1][ j ] == Black or maze[i-1][ j ] == Green) ): insert_stack(i-1 ,  j ) ; S.insert((i-1 ,  j )) ; predecessor[i-1][ j ] = ( i , j )
+        if(   (j+1 < COLS)     and   (maze[ i ][j+1] == Black or maze[ i ][j+1] == Green) ): insert_stack( i  , j+1) ; S.insert(( i  , j+1)) ; predecessor[ i ][j+1] = ( i , j )
+        if(    (j  > 0 )       and   (maze[ i ][j-1] == Black or maze[ i ][j-1] == Green) ): insert_stack( i  , j-1) ; S.insert(( i  , j-1)) ; predecessor[ i ][j-1] = ( i , j )
        
         see_neighbours = False
 

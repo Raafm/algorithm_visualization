@@ -52,13 +52,15 @@ def print_rect(screen,arr,i,color):
     pygame.display.update()
     mutex_display.release()
 
-def display(screen,arr,pivot_pos = None):
+def display(screen,arr,pivot_pos = None,display_name = True):
 
     mutex_display.acquire()
     pygame.draw.rect(screen,Black,(0,0,screen_width-150,screen_height))
-    font = pygame.font.Font('freesansbold.ttf',30)
-    text = font.render("Multithread QuickSort. ",True,Green)                        
-    screen.blit(text,text.get_rect(center = (400,30)))
+    if display_name:
+        font = pygame.font.Font('freesansbold.ttf',30)
+        text = font.render("QuickSort",True,White)                  
+        screen.blit(text,text.get_rect(center = (400,30)))
+
     for i in range(len(arr)):
         pygame.draw.rect(   screen   ,  rect_color[i]    ,   (10 + (square_width+space)*i , ground - size_rate*arr[i],    square_width  ,  size_rate*arr[i])  )
     
@@ -77,9 +79,6 @@ def take_possession(id,left,right):
 
 def ordenar(*args):
     global N_operantes
-    #arr = arg.arr
-    #N   = arg.size
-    #id  = arg.id
     arr,N,id = args
     print("thread: "+str(id)+ " criada")
     
@@ -120,10 +119,10 @@ def ordenar(*args):
         l = left
         r = right
         
-        pygame.draw.rect(screen, Light_grey, (1170,145+100*id ,80, 60))    # erase what was before in the prime 
+        pygame.draw.rect(screen, thread_color[id], (1170,145+100*1 ,80, 60))    # erase what was before in the prime 
         font = pygame.font.Font('freesansbold.ttf',20)
-        text = font.render(str(left)+","+str(right) ,True, thread_color[id])                      
-        screen.blit(text,text.get_rect(center = (1210,180+100*id)))
+        text = font.render(str(left)+","+str(right) ,True, White)                      
+        screen.blit(text,text.get_rect(center = (1210,180+100*1)))
         mutex_display.acquire()
         pygame.display.update()
         mutex_display.release()
@@ -132,11 +131,10 @@ def ordenar(*args):
             
             pivot_index = left
             pivot = arr[pivot_index]
-            print("thread" , id," starting: ",arr[left:right+1],"pivot = ",pivot)
             
             take_possession(id,left,right)
             display(screen,arr)
-            time.sleep(0.1)
+            time.sleep(0.002)
             
             while l < r:
                 
@@ -145,7 +143,7 @@ def ordenar(*args):
                     
                     print_rect(screen,arr,l,Yellow)
                     
-                    time.sleep(0.001)
+                    time.sleep(0.002)
                     l += 1
                     
                     
@@ -154,7 +152,7 @@ def ordenar(*args):
                     
                     print_rect(screen,arr,r,Yellow)
                     
-                    time.sleep(0.001)
+                    time.sleep(0.002)
                     r -= 1
                     
 
@@ -164,25 +162,24 @@ def ordenar(*args):
                     print_rect(screen,arr,r,Red)
                     print_rect(screen,arr,l,Red)
                     
-                    time.sleep(0.005)
+                    time.sleep(0.002)
                     arr[l], arr[r] = arr[r], arr[l]
                 
                 
                 display(screen,arr)
-                time.sleep(0.01)
+                time.sleep(0.002)
                 
             # Swap pivot element with element on r pointer.
             # This puts pivot on its correct sorted place.
             arr[r], arr[pivot_index] = arr[pivot_index], arr[r]
             
             
-            print("thread" , id," finished: ",arr[left:r],arr[r],arr[r+1:right+1])
 
             take_possession(-2,left,right)
             display(screen,arr,pivot_pos = r)
             take_possession(-1,r,r)
             print_rect(screen,arr,r,Lime)
-            time.sleep(0.2)
+            time.sleep(0.006)
 
             trecho = (r+1,right)
             mutex_stack.acquire()
@@ -211,12 +208,9 @@ def ordenar(*args):
 
             take_possession(-1,left,right)
             print_rect(screen,arr,left,Lime)
-            time.sleep(0.1)
+            time.sleep(0.002)
         
-    pygame.draw.rect(screen, Light_grey, (1170,145+100*id ,80, 60))   
-    font = pygame.font.Font('freesansbold.ttf',20)
-    text = font.render(str("end") ,True, thread_color[id])                      
-    screen.blit(text,text.get_rect(center = (1210,180+100*id)))
+    
     mutex_display.acquire()
     pygame.display.update()
     mutex_display.release()
@@ -229,36 +223,42 @@ def ordenar(*args):
 if __name__ == "__main__":
     
     N = 200
-    Nthreads = 4
-    threads = []
+    k = 100
+
     arr = list(randint(0,200) for _ in range(N))
     rect_color = list(White for _ in range(N))
     print(arr)
-    for i in range(Nthreads):
-        id = i
-        t = Thread(target=ordenar,args=(arr,N,id))
-        threads.append(t)
 
     Q.insert((0,N-1)) 
-    display(screen,arr)
-    time.sleep(1)
+    display(screen,arr,display_name = False)
+    time.sleep(0.5)
 
-    for t in threads:
-        t.start()
+    pygame.draw.rect(screen, thread_color[0], (1170,145+100*3 ,80, 60))   
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("k = " + str(k) ,True, White)                      
+    screen.blit(text,text.get_rect(center = (1210,180+100*3)))
+    pygame.display.update()
+
+   
+    display(screen,arr)
+    time.sleep(0.5)
+
+    t = Thread(target=ordenar,args=(arr,N,0))
+    t.start()
+    t.join()
+
+
+    print_rect(screen,arr,k-1,thread_color[0])
+    pygame.draw.rect(screen, thread_color[0], (1145,145+100*3 ,130, 60))   
+    font = pygame.font.Font('freesansbold.ttf',20)
+    text = font.render("arr[k-1]="+  str(arr[k-1]) ,True, White)                      
+    screen.blit(text,text.get_rect(center = (1210,180+100*3)))
+    
+    pygame.display.update()
 
     running =  True
-
-        
-        
-
-    for t in threads:
-        t.join()
-
-
-    print(arr)
     while running :
 
-        # pygame stuff:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()                   #exit pygame,

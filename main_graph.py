@@ -1,4 +1,4 @@
-algorithm = 2
+algorithm = 11
 
 
 #bfs
@@ -51,7 +51,7 @@ if algorithm == 5:
 #kruskal
 if algorithm == 6:
     from algorithms.kruskal import kruskal
-    from graph.normal import graph,node_list
+    from graph.heartCycle import graph,node_list
 
     kruskal(graph,node_list,steps_mode = False)
 
@@ -64,6 +64,7 @@ if algorithm == 7:
 
     cycleWith2Nodes(graph, node_list,s,t)
 
+#Cycle with node s
 if algorithm == 8:
     from algorithms.cyclewith1node import cycleWith1Node
     from graph.normal import graph,node_list
@@ -72,10 +73,26 @@ if algorithm == 8:
 
     cycleWith1Node(graph, node_list,source)
 
+#shortes Cycle with node s
 if algorithm == 9:
     from algorithms.cyclewith1nodeshortest import cycleWith1NodeShortest
-    from graph.normal import graph,node_list
+    from graph.heartCycle import graph,node_list
+    
 
-    source = 0
+    source = 13
 
-    cycleWith1NodeShortest(graph, node_list,source)
+    cycleWith1NodeShortest(graph, node_list,source,Time = 0.15,cycle_color = (255,0,0))
+
+
+
+if algorithm == 10:
+    from algorithms.kurskanimatedfs import kruskanimatedfs
+    from graph.bigGraph import graph,node_list
+
+    kruskanimatedfs(graph,node_list,steps_mode = False)
+
+if algorithm == 11:
+    from algorithms.kruskanimatedUF import kruskal
+    from graph.bigGraph import graph,node_list
+
+    kruskal(graph,node_list,steps_mode = False)

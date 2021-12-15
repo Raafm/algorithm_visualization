@@ -5,14 +5,14 @@ pygame.init()
 
 
 screen_height = 700
-screnn_width = 1000
-screen = pygame.display.set_mode((screnn_width,screen_height))
+screen_width = 1200
+screen = pygame.display.set_mode((screen_width,screen_height))
 
 screen.fill((0,0,0))
 
 
 precision  = 1
-N = 100
+N = 128
 
 
 white = (255,255,255)
@@ -25,21 +25,21 @@ labirinth = list(  list( (0,0,0) for _ in range(N) )  for _ in range(N))
 def display_maze():
 
     for k in range(N):
-        labirinth[0][k] = labirinth[k][0] = labirinth[k][99] = labirinth[99][k] = (255,255,255)
+        labirinth[0][k] = labirinth[k][0] = labirinth[k][N-1] = labirinth[N-1][k] = (255,255,255)
 
     for x in range(N):
         j = x
         for y in range(N):
             i = y
-            pygame.draw.rect(screen ,  labirinth[ 99 - i][j]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
+            pygame.draw.rect(screen ,  labirinth[ N-1 - i][j]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
 
 
     pygame.display.update()
     time.sleep(2)
 
-    labirinth[99][0] = labirinth[99][1] =  labirinth[99][2] = labirinth[99][3] =labirinth[99][4] =  (0,0,0)
+    labirinth[N-1][0] = labirinth[N-1][1] =  labirinth[N-1][2] = labirinth[N-1][3] =labirinth[N-1][4] =  (0,0,0)
     for k in range(5):
-        pygame.draw.rect(screen , labirinth[99][k],(50,50,0,0))
+        pygame.draw.rect(screen , labirinth[N-1][k],(50,50,0,0))
     pygame.display.update() 
 
 
@@ -50,18 +50,18 @@ def paint_position(x,y,wall):
 
     i,j = y,x
 
-    if i < 0 or j < 0 or i > 99 or j > 99:
+    if i < 0 or j < 0 or i > N or j > N:
         return 
 
-    if labirinth[99-i][j] == ( 255 , 255 , 255 ):
+    if labirinth[N-1-i][j] == ( 255 , 255 , 255 ):
         return
 
     if wall:
-        labirinth[99 - i][j] = (255,255,255)
+        labirinth[N -1- i][j] = (255,255,255)
     else: 
-        labirinth[99 - i][j] = ( 0 , 0 , 0 )
+        labirinth[N -1- i][j] = ( 0 , 0 , 0 )
 
-    pygame.draw.rect(screen ,  labirinth[ 99 - i][j]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
+    pygame.draw.rect(screen ,  labirinth[ N -1- i][j]  , ( 50 + 5*x , 50 + 5*y , 5 , 5 ) )
     pygame.display.update()
 
 
@@ -75,7 +75,7 @@ def cur_position(x,y,wall):
 
     i,j = y,x
 
-    if labirinth[99-i][j] == ( 255 , 255 , 255 ):
+    if labirinth[N-1-i][j] == ( 255 , 255 , 255 ):
         return
 
     if wall:
@@ -151,7 +151,7 @@ while running:
         for x0 in range(x,x+precision):
             paint_position(x0,y,wall)
 
-        x += ( precision if ( x < 99-precision ) else 0 )
+        x += ( precision if ( x < N-1-precision ) else 0 )
 
 
     if up:   
@@ -167,7 +167,7 @@ while running:
         for y0 in range(y,y+precision):
             paint_position(x,y0,wall)
 
-        y += ( precision if ( y < 99-precision ) else 0 )
+        y += ( precision if ( y < N-1-precision ) else 0 )
 
 
     if left:

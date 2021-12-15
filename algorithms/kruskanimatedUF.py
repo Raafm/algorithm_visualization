@@ -109,44 +109,6 @@ def kruskal(graph,node_position, steps_mode = False):
 
 
 
-    def show_weight(weight,position,font,weight_color = weight_color ):
-        text = font.render(str(weight),True,weight_color,10)
-        screen.blit(text,position)
-
-    def median_point(p1,p2):
-        return ((p1[0] + p2[0])/2, (p1[1] + p2[1])/2)
-
-    #start =730
-    start_list = 550        
-    def show_weight_list(edge_list,first = 0):
-        pygame.draw.rect(screen,Light_grey,(start_list,0,400,1000))
-        
-        font = pygame.font.Font('freesansbold.ttf',30)
-        text = font.render("edges",True, Black)                        
-        screen.blit(text,text.get_rect(center = (780,20)))
-
-        height_id1 = 0
-        height_id2 = 0
-        height_id3 = 0
-        font = pygame.font.Font('freesansbold.ttf',number_size-1)
-        for edge_id in range(len(edge_list)-first):
-            if 15*edge_id+20 < screen_height-80:
-                show_weight(edge_list[edge_id+first],(start_list+20,15*edge_id+60),font)
-                height_id1 = edge_id+1
-            elif 15*(edge_id-height_id1)+20 < screen_height-80:
-                show_weight(edge_list[edge_id+first],(start_list+95,15*(edge_id-height_id1)+60),font)
-                height_id2 = edge_id+1
-            elif 15*(edge_id-height_id2)+20 < screen_height-80:
-                show_weight(edge_list[edge_id+first],(start_list+165,15*(edge_id-height_id2)+60),font)
-                height_id3 = edge_id+1
-            else:
-                show_weight(edge_list[edge_id+first],(start_list+250,15*(edge_id-height_id3)+60),font)
-
-        pygame.display.update()
-
-
-
-
     font = pygame.font.Font('freesansbold.ttf',number_size)
 
 
@@ -155,7 +117,7 @@ def kruskal(graph,node_position, steps_mode = False):
             node1 = node_position[node]
             node2 = node_position[neighbour]
             pygame.draw.line(screen,Dark_grey, node1, node2,1)
-            show_weight(distance(node1,node2),median_point(node1,node2),font)
+            #show_weight(distance(node1,node2),median_point(node1,node2),font)
     
     #draw circles (nodes)
     for node_number in range(len(graph)):                                                          # draw nodes
@@ -167,16 +129,17 @@ def kruskal(graph,node_position, steps_mode = False):
 
 
     #show information
-    font = pygame.font.Font('freesansbold.ttf',40)
-    text = font.render("Kruskal",True,Cyan)                        
-    screen.blit(text,text.get_rect(center = (1100,70)))
-
-
+    font = pygame.font.Font('freesansbold.ttf',28)
+    text = font.render("Kruskal ",True,Cyan)                        
+    screen.blit(text,text.get_rect(center = (1050,70)))
+    text = font.render("animated",True,Cyan)                        
+    screen.blit(text,text.get_rect(center = (1050,100)))
+    text = font.render("with inverseFind()",True,Cyan)                        
+    screen.blit(text,text.get_rect(center = (1050,140)))
     pygame.display.update()
 
     time.sleep(1)
 
-    mst  = list(False for _ in range(len(graph)))
     edge_dict = {}
 
 
@@ -187,7 +150,6 @@ def kruskal(graph,node_position, steps_mode = False):
             if (weight,node2,node1) in edge_list: continue
             edge_list.append((weight,node1, node2))
     
-    show_weight_list(edge_list)
 
     time.sleep(1)
 
@@ -200,51 +162,13 @@ def kruskal(graph,node_position, steps_mode = False):
 
     edge_list.sort()
 
-    pygame.draw.rect(screen,Light_grey,(start_list,0,400,1000))
-
-    pygame.display.update()
-    time.sleep(1)
-
-    pygame.draw.rect(screen,Light_grey,(start_list,0,400,1000))
-
+    pygame.draw.rect(screen,Black,(1000,230,200,100))
 
 
     font = pygame.font.Font('freesansbold.ttf',30)
     text = font.render("edges",True, Black)                        
     screen.blit(text,text.get_rect(center = (780,20)))
 
-    height_id1 = 0
-    height_id2 = 0
-    height_id3 = 0
-    first = 0
-    font = pygame.font.Font('freesansbold.ttf',number_size-1)
-    for edge_id in range(len(edge_list)-first):
-        if 15*edge_id+20 < screen_height-80:
-            show_weight(edge_list[edge_id+first],(start_list,15*edge_id+60),font)
-            height_id1 = edge_id+1
-        elif 15*(edge_id-height_id1)+20 < screen_height-80:
-            show_weight(edge_list[edge_id+first],(start_list+85,15*(edge_id-height_id1)+60),font)
-            height_id2 = edge_id+1
-        elif 15*(edge_id-height_id2)+20 < screen_height-80:
-            show_weight(edge_list[edge_id+first],(start_list+165,15*(edge_id-height_id2)+60),font)
-            height_id3 = edge_id+1
-        else:
-            show_weight(edge_list[edge_id+first],(start_list+250,15*(edge_id-height_id3)+60),font)   
-        time.sleep(0.05)     
-        pygame.display.update()
-
-    time.sleep(1)
-    pygame.draw.rect(screen,Black,(1020,220,200,70))
-
-    pygame.display.update()
-
-
-    font = pygame.font.Font('freesansbold.ttf',20)
-    text = font.render("edges in MST: 0",True,Cyan)                        
-    screen.blit(text,text.get_rect(center = (1085,450)))
-    pygame.display.update()
-
-    # animation loop
    
     edge_id = 0
     N_edge_MST = 0
@@ -265,7 +189,8 @@ def kruskal(graph,node_position, steps_mode = False):
                 if event.key == pygame.K_SPACE:     #press breakspace to pause or play
                     pause = not pause   
                     time.sleep(0.2)
-
+        if pause:
+            continue
 
         if N_edge_MST == len(graph)-1:
             if  edge_id == len(edge_list):
@@ -275,7 +200,8 @@ def kruskal(graph,node_position, steps_mode = False):
             
                    
             pygame.draw.line(screen,Black,node_position[node1], node_position[node2],2)
-            show_weight(distance(node_position[node1],node_position[node2]),median_point(node_position[node1],node_position[node2]),font,Black)#erase weight
+            pygame.display.update()
+            time.sleep(0.003)
             continue
 
 
@@ -283,46 +209,29 @@ def kruskal(graph,node_position, steps_mode = False):
         weight,node1,node2 = edge_list[edge_id]
         pygame.draw.line(screen,cur_edge_color,node_position[node1], node_position[node2],2)
         
-        font = pygame.font.Font('freesansbold.ttf',number_size-1)
-        show_weight(edge_list[edge_id],(start_list+20,15*0 + 60),font,Green)
-
+        
         pygame.display.update()        
         if not pause: time.sleep(0.1) 
 
-        if pause:
-            continue
-        
 
-        if steps_mode: #pause every step of the algorithm
-            pause = True  #when this iteration ends,the animation is paused              
+ 
         
-
-        
-
-        if not steps_mode:
-            time.sleep(0.1)
-        
-        pygame.draw.line(screen,Black,node_position[node1], node_position[node2],2)
         
 
         if disjoint_set.Find(node1) != disjoint_set.Find(node2):
             
-            disjoint_set.Union(node1,node2)
+            if disjoint_set.child_list(node1).size < disjoint_set.child_list(node2).size:
+                
+                node1,node2 = node2,node1 
+
             N_edge_MST += 1
             
-
-
-            pygame.draw.rect(screen,Black,(1000,400,200,200))
-            font = pygame.font.Font('freesansbold.ttf',20)
-            text = font.render("edges in MST: "+str(N_edge_MST),True,Cyan)                        
-            screen.blit(text,text.get_rect(center = (1085,450)))
-            pygame.display.update()
 
 
             pygame.draw.line(screen,choose_edge_color,node_position[node1], node_position[node2],5)
 
             Patriarch = disjoint_set.Find(node1)
-            node_ptr = disjoint_set.child_list(node1).head
+            node_ptr = disjoint_set.child_list(node2).head
 
             while node_ptr is not None:
                 
@@ -330,29 +239,27 @@ def kruskal(graph,node_position, steps_mode = False):
                 set_color[node_ptr.data] = set_color[Patriarch]
                 pygame.draw.circle(screen,set_color[Patriarch],pos,8)
                 pygame.display.update()
-                time.sleep(0.01)
+                time.sleep(0.003)
                 node_ptr = node_ptr.next
 
-
+            pygame.draw.circle(screen,set_color[Patriarch],node_position[node1],8)
             pygame.display.update()
-            if not steps_mode: time.sleep(0.05)
+            
 
-
+            disjoint_set.Union(node1,node2)
         
         elif (node1,node2) not in edge_dict and (node2,node1) not in edge_dict:
             pygame.draw.line(screen,not_choosen_color,node_position[node1], node_position[node2],2)
-            show_weight(distance(node_position[node1],node_position[node2]),median_point(node_position[node1],node_position[node2]),font,Black)#erase weight
             pygame.draw.circle(screen,set_color[node1],node_position[node1],8)
             pygame.draw.circle(screen,set_color[node2],node_position[node2],8)
             pygame.display.update()
-            if not steps_mode: time.sleep(0.05)
+            
 
         edge_dict[(node1,node2)] = True
-        show_weight_list(edge_list,first=edge_id+1)
 
-        if not steps_mode:
-            time.sleep(0.05)
+
+        
      
         edge_id += 1
-        if edge_id == len(edge_list):
+        if edge_id == len(edge_list) or N_edge_MST == len(graph)-1:
             pause = True
