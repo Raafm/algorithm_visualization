@@ -1,4 +1,4 @@
-algorithm = 11
+algorithm = 14
 
 
 #bfs
@@ -96,3 +96,21 @@ if algorithm == 11:
     from graph.bigGraph import graph,node_list
 
     kruskal(graph,node_list,steps_mode = False)
+
+if algorithm == 12:
+    from algorithms.BellmanFord import BellmanFord
+    from graph.normal import graph,node_list
+
+    BellmanFord(graph,node_list,steps_mode = False)
+
+if algorithm == 13:
+    from algorithms.BellmanFord_iterative import BellmanFord
+    from graph.normal import graph,node_list
+
+    BellmanFord(graph,node_list,steps_mode = False)
+
+if algorithm == 14:
+    from algorithms.Boruvka import boruvka
+    from graph.normal import graph,node_list
+
+    boruvka(graph,node_list,steps_mode = False)

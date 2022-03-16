@@ -55,9 +55,6 @@ def print_square(i,j):
 
 
 
-
-
-
 def DFS(i,j):
     
     time.sleep(0.003*(random.randint(0,10) == 0))
