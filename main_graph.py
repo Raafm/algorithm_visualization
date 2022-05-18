@@ -114,3 +114,9 @@ if algorithm == 14:
     from graph.normal import graph,node_list
 
     boruvka(graph,node_list,steps_mode = False)
+
+if algorithm == 15:
+    from algorithms.MultithreadBoruvka import boruvka
+    from graph.normal import graph,node_list
+
+    boruvka(graph,node_list,steps_mode = False)
