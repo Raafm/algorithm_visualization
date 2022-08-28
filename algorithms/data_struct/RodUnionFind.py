@@ -41,7 +41,7 @@ class UnionFind:
         self.parent   = list(i for i in range(N))
         self.children = list(linked_list(Node(i)) for i in range(N))
         self.rank     = list(0 for _ in range(N))
-
+        self.info     = None
         self.reference  = list(Node(i) for i in range(N))  # give the node address of element i
         self.patriarchs = linked_list(self.reference[0])  # linked list of the Patriachs' nodes
  
