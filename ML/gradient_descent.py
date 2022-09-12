@@ -1,4 +1,3 @@
-from logging import info
 import pygame,time,random,math
 from color import *
 
